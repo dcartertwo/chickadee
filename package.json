@@ -1,0 +1,17 @@
+{
+  "name": "chickadee",
+  "version": "0.0.1",
+  "description": "Cloudflare-powered, self-managed, open-source website analytics",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "analytics",
+    "website",
+    "analytics",
+    "self-hosted",
+    "Cloudflare"
+  ],
+  "author": "abegehr",
+  "packageManager": "pnpm@10.8.0+sha512.0e82714d1b5b43c74610193cb20734897c1d00de89d0e18420aebc5977fa13d780a9cb05734624e81ebd81cc876cd464794850641c48b9544326b5622ca29971"
+}
