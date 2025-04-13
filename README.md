@@ -8,6 +8,10 @@ Monorepo:
 - `./packages/cli` - used for deploying the service
 - `./packages/web` - the landing page: <https://www.chickadee.me>
 
+## Deploy your Own
+
+<!-- TODO! how to deploy chickadee -->
+
 ## Development
 
 ### Dev Vars
