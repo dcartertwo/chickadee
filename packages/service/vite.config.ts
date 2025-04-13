@@ -6,7 +6,7 @@ import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig(({ command, isSsrBuild }) => {
   if (command === "serve") {
-    return { plugins: [ssrHotReload(), cloudflare()] };
+    return { plugins: [ssrHotReload(), cloudflare(), tailwindcss()] };
   }
   if (!isSsrBuild) {
     return {
