@@ -1,6 +1,7 @@
 import { Hono, type Env as HonoEnv } from "hono";
 import dashboard from "./dashboard";
 import api from "./api";
+import test from "./test";
 
 interface Variables {
   CLOUDFLARE_API_TOKEN: string;
@@ -10,7 +11,7 @@ export interface Bindings {
   ENVIRONMENT: "development" | "production";
 
   // Bindings
-  ENGINE: AnalyticsEngineDataset;
+  ENGINE?: AnalyticsEngineDataset;
 }
 
 export interface Env extends HonoEnv {
@@ -25,5 +26,8 @@ app.route("/", dashboard);
 
 // serve the api
 app.route("/api", api);
+
+// serve the test page
+app.route("/test", test);
 
 export default app;
