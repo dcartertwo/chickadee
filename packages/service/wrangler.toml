@@ -8,6 +8,10 @@ directory = "dist"
 [vars]
 ENVIRONMENT = "production"
 
+[[analytics_engine_datasets]]
+binding = "ENGINE"
+dataset = "chickadee"
+
 [observability]
 enabled = true
 head_sampling_rate = 1.0

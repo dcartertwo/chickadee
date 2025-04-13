@@ -8,7 +8,13 @@ Monorepo:
 - `./packages/cli` - used for deploying the service
 - `./packages/web` - the landing page: <https://www.chickadee.me>
 
-## Dev Experience
+## Development
+
+### Dev Vars
+
+`./packages/service/.dev.vars` is used for local development:
+
+- `CLOUDFLARE_API_TOKEN` - Cloudflare account token with "Access: Analytics" Read permission: <https://developers.cloudflare.com/analytics/analytics-engine/get-started/#create-an-api-token>
 
 ### AI/LLMs
 

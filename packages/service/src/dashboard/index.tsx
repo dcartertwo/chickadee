@@ -6,6 +6,7 @@ const app = new Hono();
 app.use(renderer);
 
 app.get("/", (c) => {
+  // TODO! dashboard
   return c.render(
     <article class="prose lg:prose-xl">
       <h1>Hello!</h1>
