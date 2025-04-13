@@ -15,22 +15,22 @@ importers:
         version: 4.7.6
     devDependencies:
       '@cloudflare/vite-plugin':
-        specifier: ^0.1.15
+        specifier: ^0.1.21
         version: 0.1.21(vite@6.2.6)(workerd@1.20250409.0)(wrangler@4.10.0(@cloudflare/workers-types@4.20250413.0))
       '@cloudflare/workers-types':
-        specifier: ^4.20250214.0
+        specifier: ^4.20250413.0
         version: 4.20250413.0
       '@hono/vite-build':
-        specifier: ^1.5.0
+        specifier: ^1.6.0
         version: 1.6.0(hono@4.7.6)
       vite:
-        specifier: ^6.1.1
+        specifier: ^6.2.6
         version: 6.2.6
       vite-plugin-ssr-hot-reload:
-        specifier: ^0.4.1
+        specifier: ^0.4.2
         version: 0.4.2
       wrangler:
-        specifier: ^4.4.0
+        specifier: ^4.10.0
         version: 4.10.0(@cloudflare/workers-types@4.20250413.0)
 
 packages:
