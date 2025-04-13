@@ -21,20 +21,18 @@ app.get("/", (c) => {
 
 app.get(
   "/events",
-  zValidator("query", z.object({ d: z.string() })),
+  zValidator(
+    "query",
+    z.object({ d: z.string(), p: z.string().startsWith("/") })
+  ),
   async (c) => {
-    const { d: domain } = c.req.valid("query");
-    console.debug("DEBUG query", { domain });
+    const { d: domain, p: path } = c.req.valid("query");
+    console.debug("DEBUG query", { domain, path });
 
     // HonoRequest: https://hono.dev/docs/api/request
-    const headers = c.req.header();
-    console.debug("DEBUG headers", headers);
-    const host = c.req.header("Host");
-    const origin = c.req.header("Origin");
-    const referer = c.req.header("Referer");
     const userAgent = c.req.header("User-Agent");
     // TODO! parse userAgent
-    console.debug("DEBUG HonoRequest", { host, origin, referer, userAgent });
+    console.debug("DEBUG HonoRequest", { userAgent });
 
     // CF Request Properties: https://developers.cloudflare.com/workers/runtime-apis/request/#incomingrequestcfproperties
     const cf = c.req.raw.cf as IncomingRequestCfProperties | undefined;
