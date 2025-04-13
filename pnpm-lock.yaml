@@ -42,6 +42,9 @@ importers:
       '@hono/vite-build':
         specifier: ^1.6.0
         version: 1.6.0(hono@4.7.6)
+      daisyui:
+        specifier: ^5.0.19
+        version: 5.0.19
       vite:
         specifier: ^6.2.6
         version: 6.2.6(jiti@2.4.2)(lightningcss@1.29.2)
@@ -875,6 +878,9 @@ packages:
   cookie@0.7.2:
     resolution: {integrity: sha512-yki5XnKuf750l50uGTllt6kKILY4nQ1eNIQatoXEByZ5dWgnKqbnqmTrBE5B4N7lrMJKQ2ytWMiTO2o0v6Ew/w==}
     engines: {node: '>= 0.6'}
+
+  daisyui@5.0.19:
+    resolution: {integrity: sha512-vuxloVgdmTnGpA6CFnQyLkXuqPmusHgYZ0L5Qg1pQzAYPUMc0HM2S3brnu7xRnAUq7ZMAqyoV78Fvht7nY2svg==}
 
   data-uri-to-buffer@2.0.2:
     resolution: {integrity: sha512-ND9qDTLc6diwj+Xe5cdAgVTbLVdXbtxTJRXRhli8Mowuaan+0EJOtdqJ0QCHNSSPyoXGx9HX2/VMnKeC34AChA==}
@@ -1802,6 +1808,8 @@ snapshots:
     optional: true
 
   cookie@0.7.2: {}
+
+  daisyui@5.0.19: {}
 
   data-uri-to-buffer@2.0.2: {}
 

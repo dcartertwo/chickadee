@@ -20,6 +20,7 @@
     "@cloudflare/vite-plugin": "^0.1.21",
     "@cloudflare/workers-types": "^4.20250413.0",
     "@hono/vite-build": "^1.6.0",
+    "daisyui": "^5.0.19",
     "vite": "^6.2.6",
     "vite-plugin-ssr-hot-reload": "^0.4.2",
     "wrangler": "^4.10.0"
