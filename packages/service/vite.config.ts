@@ -2,6 +2,7 @@ import { cloudflare } from "@cloudflare/vite-plugin";
 import build from "@hono/vite-build/cloudflare-workers";
 import { defineConfig } from "vite";
 import ssrHotReload from "vite-plugin-ssr-hot-reload";
+import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig(({ command, isSsrBuild }) => {
   if (command === "serve") {
@@ -17,6 +18,7 @@ export default defineConfig(({ command, isSsrBuild }) => {
           },
         },
       },
+      plugins: [tailwindcss()],
     };
   }
   return {
