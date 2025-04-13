@@ -2,6 +2,12 @@
 
 Chickadee is a self-managed, open-source website analytics tool built with Cloudflare.
 
+Monorepo:
+
+- `./packages/service` - the service: events endpoint, client script, and dashboard
+- `./packages/cli` - used for deploying the service
+- `./packages/web` - the landing page: <https://www.chickadee.me>
+
 ## Dev Experience
 
 ### AI/LLMs
