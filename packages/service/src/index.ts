@@ -1,8 +1,9 @@
 import { Hono } from "hono";
-import test from "./test";
+import dashboard from "./dashboard";
 
 const app = new Hono();
 
-app.route("/test", test);
+// serve the dashboard
+app.route("/", dashboard);
 
 export default app;
