@@ -1,3 +1,8 @@
 {
-  "cSpell.words": ["abegehr", "cloudflare", "execpath"]
+  "cSpell.words": ["abegehr", "cloudflare", "execpath"],
+  "cSpell.language": "en",
+  "editor.defaultFormatter": "biomejs.biome",
+  "search.exclude": {
+    ".cursor": true
+  }
 }
