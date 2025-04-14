@@ -16,7 +16,15 @@ app.use(
   cors({
     origin: "*",
     allowMethods: ["OPTIONS", "GET", "POST"],
-    allowHeaders: ["Content-Type", "User-Agent"],
+    allowHeaders: [
+      "Content-Type",
+      "User-Agent",
+      "Referer",
+      "Accept",
+      "Sec-Fetch-Dest",
+      "Sec-Fetch-Mode",
+      "Sec-Fetch-Site",
+    ],
     exposeHeaders: ["Content-Length"],
     maxAge: 600, // 10 minutes
   })
