@@ -4,7 +4,7 @@ import { zValidator } from "@hono/zod-validator";
 import type { Env } from "..";
 import { getConnInfo } from "hono/cloudflare-workers";
 import { cors } from "hono/cors";
-import { UAParser } from "ua-parser-js";
+import { IData, UAParser } from "ua-parser-js";
 
 const app = new Hono<Env>();
 
@@ -25,71 +25,57 @@ app.post(
   ),
   async (c) => {
     try {
+      // Request Body
       const { d: domain, u, r: referrer } = c.req.valid("json");
       const url = new URL(u);
-      const host = url.host;
-      const pathname = url.pathname;
-      console.debug("DEBUG body", { domain, url, host, pathname, referrer });
 
       // HonoRequest: https://hono.dev/docs/api/request
       const userAgent = c.req.header("User-Agent");
-      console.debug("DEBUG HonoRequest", { userAgent });
-
-      // parse userAgent
-      const ua = new UAParser(userAgent);
-      const browser = ua.getBrowser().name;
-      const browserVersion = ua.getBrowser().version;
-      const os = ua.getOS().name;
-      const osVersion = ua.getOS().version;
-      const device = ua.getDevice().type ?? "desktop";
-      console.debug("DEBUG userAgent", {
-        browser,
-        browserVersion,
-        os,
-        osVersion,
-        device,
-      });
+      const ua = userAgent ? UAParser(userAgent) : undefined;
 
       // CF Request Properties: https://developers.cloudflare.com/workers/runtime-apis/request/#incomingrequestcfproperties
       const cf = c.req.raw.cf as IncomingRequestCfProperties | undefined;
-      const country = cf?.country;
-      const region = cf?.regionCode;
-      const city = cf?.city;
-      const latitude = cf?.latitude ? Number.parseFloat(cf?.latitude) : null;
-      const longitude = cf?.longitude ? Number.parseFloat(cf?.longitude) : null;
-      const timezone = cf?.timezone;
-      // CF Bot Management: https://developers.cloudflare.com/bots/concepts/bot-score/
-      const isBot =
-        cf &&
-        (cf.botManagement.verifiedBot ||
-          (cf.botManagement.score > 0 && cf.botManagement.score < 30));
-      console.debug("DEBUG cf parsed", {
-        country,
-        region,
-        city,
-        latitude,
-        longitude,
-        timezone,
-        isBot,
-      });
 
       // Connection Info: https://hono.dev/docs/helpers/conninfo
       const info = getConnInfo(c);
-      const ip = info.remote.address;
-      console.debug("DEBUG connInfo", { ip });
 
-      // Write event to Analytics Engine.
-      // * Limits: https://developers.cloudflare.com/analytics/analytics-engine/limits/
-      const event: AnalyticsEngineDataPoint = {
-        // max 1 index, 96 bytes
-        indexes: [],
-        // max 20 blobs, total 5120 bytes
-        blobs: [],
-        // max 20 doubles
-        doubles: [],
+      // Build data point
+      const data: IDataPoint = {
+        domain,
+        host: url.host,
+        pathname: url.pathname,
+        referrer,
+
+        // Location
+        country: cf?.country,
+        region: cf?.regionCode,
+        city: cf?.city,
+        location: `${cf?.latitude},${cf?.longitude}`,
+        timezone: cf?.timezone,
+
+        // User Agent
+        userAgent,
+        browser: ua?.browser.name,
+        browserVersion: ua?.browser.version,
+        os: ua?.os.name,
+        osVersion: ua?.os.version,
+        device: ua ? ua.device.type ?? "desktop" : undefined, // default to desktop: https://github.com/faisalman/ua-parser-js/issues/182
+
+        // Connection
+        ip: info.remote.address,
+
+        // CF Bot Management: https://developers.cloudflare.com/bots/concepts/bot-score/
+        isBot:
+          cf &&
+          (cf.botManagement.verifiedBot ||
+            (cf.botManagement.score > 0 && cf.botManagement.score < 30)),
       };
-      if (c.env.ENGINE) c.env.ENGINE.writeDataPoint(event);
-      else console.info("EVENT", event);
+
+      // Write data point to Analytics Engine.
+      // * Limits: https://developers.cloudflare.com/analytics/analytics-engine/limits/
+      if (c.env.ENGINE)
+        c.env.ENGINE.writeDataPoint(toAnalyticsEngineDataPoint(data));
+      else console.info("EVENT", data);
 
       return c.text("ok", 200);
     } catch (err) {
@@ -98,5 +84,73 @@ app.post(
     }
   }
 );
+
+// Data Point Schema
+
+const ZDataPoint = z.object({
+  domain: z.string(), // index-1
+
+  // Basic
+  host: z.string(), // blob-1
+  pathname: z.string(), // blob-2
+  referrer: z.string(), // blob-3
+
+  // Location
+  country: z.string().optional(), // blob-4
+  region: z.string().optional(), // blob-5
+  city: z.string().optional(), // blob-6
+  location: z.string().optional(), // blob-7
+  timezone: z.string().optional(), // blob-8
+
+  // User Agent
+  userAgent: z.string().optional(), // blob-9
+  browser: z.string().optional(), // blob-10
+  browserVersion: z.string().optional(), // blob-11
+  os: z.string().optional(), // blob-12
+  osVersion: z.string().optional(), // blob-13
+  device: z.string().optional(), // blob-14
+
+  // Connection
+  ip: z.string().optional(), // blob-15
+
+  // Flag
+  isBot: z.boolean().optional(), // double-1
+});
+type IDataPoint = z.infer<typeof ZDataPoint>;
+
+function toAnalyticsEngineDataPoint(
+  data: IDataPoint
+): AnalyticsEngineDataPoint {
+  return {
+    // max 1 index, 96 bytes
+    indexes: [data.domain],
+    // max 20 blobs, total 5120 bytes
+    blobs: [
+      data.host, // blob-1
+      data.pathname, // blob-2
+      data.referrer, // blob-3
+
+      // Location
+      data.country ?? null, // blob-4
+      data.region ?? null, // blob-5
+      data.city ?? null, // blob-6
+      data.location ?? null, // blob-7
+      data.timezone ?? null, // blob-8
+
+      // User Agent
+      data.userAgent ?? null, // blob-9
+      data.browser ?? null, // blob-10
+      data.browserVersion ?? null, // blob-11
+      data.os ?? null, // blob-12
+      data.osVersion ?? null, // blob-13
+      data.device ?? null, // blob-14
+
+      // Connection
+      data.ip ?? null, // blob-15
+    ],
+    // max 20 doubles
+    doubles: [data.isBot ? 1 : 0], // double-1
+  };
+}
 
 export default app;
