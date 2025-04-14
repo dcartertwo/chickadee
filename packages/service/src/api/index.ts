@@ -19,15 +19,15 @@ app.get("/", (c) => {
   return c.text("Hello API :)");
 });
 
-app.get(
+app.post(
   "/events",
-  zValidator(
-    "query",
-    z.object({ d: z.string(), p: z.string().startsWith("/") })
-  ),
+  zValidator("json", z.object({ d: z.string(), u: z.string().url() })),
   async (c) => {
-    const { d: domain, p: path } = c.req.valid("query");
-    console.debug("DEBUG query", { domain, path });
+    const { d: domain, u } = c.req.valid("json");
+    const url = new URL(u);
+    const host = url.host;
+    const pathname = url.pathname;
+    console.debug("DEBUG body", { domain, url, host, pathname });
 
     // HonoRequest: https://hono.dev/docs/api/request
     const userAgent = c.req.header("User-Agent");
