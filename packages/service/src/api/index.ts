@@ -4,6 +4,7 @@ import { zValidator } from "@hono/zod-validator";
 import type { Env } from "..";
 import { getConnInfo } from "hono/cloudflare-workers";
 import { cors } from "hono/cors";
+import { UAParser } from "ua-parser-js";
 
 const app = new Hono<Env>();
 
@@ -19,10 +20,7 @@ app.use(
   })
 );
 
-app.get("/", (c) => {
-  return c.text("Hello API :)");
-});
-
+// POST events
 app.post(
   "/events",
   zValidator(
@@ -39,8 +37,16 @@ app.post(
 
       // HonoRequest: https://hono.dev/docs/api/request
       const userAgent = c.req.header("User-Agent");
-      // TODO! parse userAgent
       console.debug("DEBUG HonoRequest", { userAgent });
+
+      // parse userAgent
+      const ua = new UAParser(userAgent);
+      const browser = ua.getBrowser().name;
+      const browserVersion = ua.getBrowser().version;
+      const os = ua.getOS().name;
+      const osVersion = ua.getOS().version;
+      const device = ua.getDevice().type ?? "desktop";
+      console.debug("DEBUG userAgent", { browser, browserVersion, os, osVersion, device });
 
       // CF Request Properties: https://developers.cloudflare.com/workers/runtime-apis/request/#incomingrequestcfproperties
       const cf = c.req.raw.cf as IncomingRequestCfProperties | undefined;
