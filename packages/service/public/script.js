@@ -22,4 +22,4 @@ async function trackPageView() {
   }
 }
 
-trackPageView();
+trackPageView(); // TODO auto-track client-side navigation?
