@@ -1,7 +1,6 @@
 import { Hono, type Env as HonoEnv } from "hono";
 import dashboard from "./dashboard";
 import api from "./api";
-import test from "./test";
 import { logger } from "hono/logger";
 
 type Variables = object;
