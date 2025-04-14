@@ -40,6 +40,8 @@ app.post(
         domain,
         host: url.host,
         pathname: url.pathname,
+        search: url.search,
+        hash: url.hash,
         referrer,
 
         // Location
@@ -86,22 +88,24 @@ const ZDataPoint = z.object({
   // Basic
   host: z.string(), // blob-1
   pathname: z.string(), // blob-2
-  referrer: z.string(), // blob-3
+  search: z.string().optional(), // blob-3
+  hash: z.string().optional(), // blob-4
+  referrer: z.string(), // blob-5
 
   // Location
-  country: z.string().optional(), // blob-4
-  region: z.string().optional(), // blob-5
-  city: z.string().optional(), // blob-6
-  location: z.string().optional(), // blob-7
-  timezone: z.string().optional(), // blob-8
+  country: z.string().optional(), // blob-6
+  region: z.string().optional(), // blob-7
+  city: z.string().optional(), // blob-8
+  location: z.string().optional(), // blob-9
+  timezone: z.string().optional(), // blob-10
 
   // User Agent
-  userAgent: z.string().optional(), // blob-9
-  browser: z.string().optional(), // blob-10
-  browserVersion: z.string().optional(), // blob-11
-  os: z.string().optional(), // blob-12
-  osVersion: z.string().optional(), // blob-13
-  device: z.string().optional(), // blob-14
+  userAgent: z.string().optional(), // blob-11
+  browser: z.string().optional(), // blob-12
+  browserVersion: z.string().optional(), // blob-13
+  os: z.string().optional(), // blob-14
+  osVersion: z.string().optional(), // blob-15
+  device: z.string().optional(), // blob-16
 
   // Flag
   isBot: z.boolean().optional(), // double-1
@@ -118,22 +122,24 @@ function toAnalyticsEngineDataPoint(
     blobs: [
       data.host, // blob-1
       data.pathname, // blob-2
-      data.referrer, // blob-3
+      data.search ?? null, // blob-3
+      data.hash ?? null, // blob-4
+      data.referrer, // blob-5
 
       // Location
-      data.country ?? null, // blob-4
-      data.region ?? null, // blob-5
-      data.city ?? null, // blob-6
-      data.location ?? null, // blob-7
-      data.timezone ?? null, // blob-8
+      data.country ?? null, // blob-6
+      data.region ?? null, // blob-7
+      data.city ?? null, // blob-8
+      data.location ?? null, // blob-9
+      data.timezone ?? null, // blob-10
 
       // User Agent
-      data.userAgent ?? null, // blob-9
-      data.browser ?? null, // blob-10
-      data.browserVersion ?? null, // blob-11
-      data.os ?? null, // blob-12
-      data.osVersion ?? null, // blob-13
-      data.device ?? null, // blob-14
+      data.userAgent ?? null, // blob-11
+      data.browser ?? null, // blob-12
+      data.browserVersion ?? null, // blob-13
+      data.os ?? null, // blob-14
+      data.osVersion ?? null, // blob-15
+      data.device ?? null, // blob-16
     ],
     // max 20 doubles
     doubles: [data.isBot ? 1 : 0], // double-1
