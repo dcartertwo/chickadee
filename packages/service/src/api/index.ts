@@ -4,29 +4,14 @@ import { zValidator } from "@hono/zod-validator";
 import type { Env } from "..";
 import { getConnInfo } from "hono/cloudflare-workers";
 import { cors } from "hono/cors";
-import { logger } from "hono/logger";
 
 const app = new Hono<Env>();
-
-// logger
-app.use(logger());
 
 // cors
 app.use(
   cors({
-    origin: "*",
-    allowMethods: ["OPTIONS", "GET", "POST"],
-    allowHeaders: [
-      "Content-Type",
-      "User-Agent",
-      "Referer",
-      "Accept",
-      "Sec-Fetch-Dest",
-      "Sec-Fetch-Mode",
-      "Sec-Fetch-Site",
-    ],
-    exposeHeaders: ["Content-Length"],
-    maxAge: 600, // 10 minutes
+    origin: (origin) => origin, // allow all origins
+    allowMethods: ["POST"],
   })
 );
 

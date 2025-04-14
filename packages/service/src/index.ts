@@ -2,6 +2,7 @@ import { Hono, type Env as HonoEnv } from "hono";
 import dashboard from "./dashboard";
 import api from "./api";
 import test from "./test";
+import { logger } from "hono/logger";
 
 type Variables = object;
 
@@ -23,6 +24,9 @@ export interface Env extends HonoEnv {
 }
 
 const app = new Hono<Env>();
+
+// logger
+app.use(logger());
 
 // serve the dashboard
 app.route("/", dashboard);
