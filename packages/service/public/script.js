@@ -1,5 +1,3 @@
-// TODO! publish this script
-
 const d = "test.com";
 const u = window.location.href;
 fetch(`https://chickadee.5sides.workers.dev/api/events`, {
