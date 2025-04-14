@@ -31,9 +31,6 @@ app.use(logger());
 // serve the api
 app.route("/api", api);
 
-// serve the test page
-app.route("/test", test);
-
 // serve the dashboard - should be last
 app.route("/", dashboard);
 
