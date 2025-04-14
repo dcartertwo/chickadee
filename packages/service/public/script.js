@@ -1,12 +1,25 @@
-const d = "test.com";
-const u = window.location.href;
-fetch(`https://chickadee.5sides.workers.dev/api/events`, {
-  method: "POST",
-  body: JSON.stringify({ d, u }),
-  headers: {
-    "Content-Type": "application/json",
-  },
-})
-  .then((res) => res.text())
-  .then((data) => console.log("Chickadee ->", data))
-  .catch((err) => console.error("Chickadee Error:", err));
+async function trackPageView() {
+  const ep = new URL(`/api/events`, document.currentScript.src);
+
+  const d = "test.com"; // TODO!
+  const u = window.location.href;
+  const r = document.referrer;
+  const body = { d, u, r };
+  console.log("Chickadees Page View:", ep, body);
+
+  try {
+    const res = await fetch(ep, {
+      method: "POST",
+      body: JSON.stringify(body),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await res.text();
+    console.log("Chickadee ->", data);
+  } catch (err) {
+    console.error("Chickadee Error:", err);
+  }
+}
+
+trackPageView();

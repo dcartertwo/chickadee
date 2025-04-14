@@ -9,9 +9,8 @@ export const renderer = jsxRenderer(({ children }) => {
           rel="stylesheet"
         />
 
-        <script
-          src={import.meta.env.PROD ? "/assets/script.js" : "/src/script.js"}
-        />
+        {/* Chickadee Analytics */}
+        <script src="/script.js" />
       </head>
       <body>{children}</body>
     </html>
