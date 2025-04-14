@@ -2,9 +2,8 @@ import { Hono } from "hono";
 import { z } from "zod";
 import { zValidator } from "@hono/zod-validator";
 import type { Env } from "..";
-import { getConnInfo } from "hono/cloudflare-workers";
 import { cors } from "hono/cors";
-import { IData, UAParser } from "ua-parser-js";
+import { UAParser } from "ua-parser-js";
 
 const app = new Hono<Env>();
 
@@ -36,9 +35,6 @@ app.post(
       // CF Request Properties: https://developers.cloudflare.com/workers/runtime-apis/request/#incomingrequestcfproperties
       const cf = c.req.raw.cf as IncomingRequestCfProperties | undefined;
 
-      // Connection Info: https://hono.dev/docs/helpers/conninfo
-      const info = getConnInfo(c);
-
       // Build data point
       const data: IDataPoint = {
         domain,
@@ -60,9 +56,6 @@ app.post(
         os: ua?.os.name,
         osVersion: ua?.os.version,
         device: ua ? ua.device.type ?? "desktop" : undefined, // default to desktop: https://github.com/faisalman/ua-parser-js/issues/182
-
-        // Connection
-        ip: info.remote.address,
 
         // CF Bot Management: https://developers.cloudflare.com/bots/concepts/bot-score/
         isBot:
@@ -110,9 +103,6 @@ const ZDataPoint = z.object({
   osVersion: z.string().optional(), // blob-13
   device: z.string().optional(), // blob-14
 
-  // Connection
-  ip: z.string().optional(), // blob-15
-
   // Flag
   isBot: z.boolean().optional(), // double-1
 });
@@ -144,9 +134,6 @@ function toAnalyticsEngineDataPoint(
       data.os ?? null, // blob-12
       data.osVersion ?? null, // blob-13
       data.device ?? null, // blob-14
-
-      // Connection
-      data.ip ?? null, // blob-15
     ],
     // max 20 doubles
     doubles: [data.isBot ? 1 : 0], // double-1
