@@ -14,6 +14,7 @@ app.use(
     allowMethods: ["POST", "OPTIONS"],
     allowHeaders: ["Content-Type", "User-Agent"],
     exposeHeaders: ["Content-Length", "Content-Type"],
+    maxAge: 600, // 10 minutes
   })
 );
 
