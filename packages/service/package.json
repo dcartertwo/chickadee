@@ -18,7 +18,7 @@
   },
   "devDependencies": {
     "@cloudflare/vite-plugin": "^0.1.21",
-    "@cloudflare/workers-types": "^4.20250413.0",
+    "@cloudflare/workers-types": "^4.20250414.0",
     "@hono/vite-build": "^1.6.0",
     "@tailwindcss/typography": "^0.5.16",
     "daisyui": "^5.0.19",
