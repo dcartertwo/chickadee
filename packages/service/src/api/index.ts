@@ -11,11 +11,7 @@ const app = new Hono<Env>();
 // cors
 app.use(
   cors({
-    origin: (origin) => {
-      console.debug("DEBUG origin", { origin });
-      console.info("INFO origin", { origin });
-      return origin;
-    }, // allow all origins
+    origin: "*", // allow all origins
     allowMethods: ["OPTIONS", "GET", "POST"],
   })
 );
@@ -46,7 +42,13 @@ app.post(
       const os = ua.getOS().name;
       const osVersion = ua.getOS().version;
       const device = ua.getDevice().type ?? "desktop";
-      console.debug("DEBUG userAgent", { browser, browserVersion, os, osVersion, device });
+      console.debug("DEBUG userAgent", {
+        browser,
+        browserVersion,
+        os,
+        osVersion,
+        device,
+      });
 
       // CF Request Properties: https://developers.cloudflare.com/workers/runtime-apis/request/#incomingrequestcfproperties
       const cf = c.req.raw.cf as IncomingRequestCfProperties | undefined;
