@@ -20,9 +20,3 @@ Monorepo:
 
 - `BASIC_PASSWORD` - the password for basic auth to access the dashboard
 - `CLOUDFLARE_API_TOKEN` - Cloudflare account token with "Access: Analytics" Read permission: <https://developers.cloudflare.com/analytics/analytics-engine/get-started/#create-an-api-token>
-
-### AI/LLMs
-
-The following LLM docs are included in `.cursor/rules`:
-
-- `hono.mdc`: <https://hono.dev/llms-small.txt>
