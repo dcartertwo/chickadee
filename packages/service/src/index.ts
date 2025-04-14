@@ -3,12 +3,15 @@ import dashboard from "./dashboard";
 import api from "./api";
 import test from "./test";
 
-interface Variables {
-  CLOUDFLARE_API_TOKEN: string;
-}
+type Variables = object;
 
 export interface Bindings {
   ENVIRONMENT: "development" | "production";
+  // Auth
+  BASIC_USERNAME: string;
+  BASIC_PASSWORD: string;
+  // Cloudflare
+  CLOUDFLARE_API_TOKEN: string;
 
   // Bindings
   ENGINE?: AnalyticsEngineDataset;

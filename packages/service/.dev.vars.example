@@ -1,4 +1,7 @@
 ENVIRONMENT=development
 
+# Auth
+BASIC_PASSWORD=
+
 # Cloudflare
 CLOUDFLARE_API_TOKEN=

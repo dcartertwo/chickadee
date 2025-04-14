@@ -18,6 +18,7 @@ Monorepo:
 
 `./packages/service/.dev.vars` is used for local development:
 
+- `BASIC_PASSWORD` - the password for basic auth to access the dashboard
 - `CLOUDFLARE_API_TOKEN` - Cloudflare account token with "Access: Analytics" Read permission: <https://developers.cloudflare.com/analytics/analytics-engine/get-started/#create-an-api-token>
 
 ### AI/LLMs

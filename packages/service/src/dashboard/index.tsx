@@ -1,7 +1,16 @@
 import { Hono } from "hono";
 import { renderer } from "./renderer";
+import { basicAuth } from "hono/basic-auth";
+import type { Env } from "..";
 
-const app = new Hono();
+const app = new Hono<Env>();
+
+app.use((c, next) =>
+  basicAuth({
+    username: c.env.BASIC_USERNAME,
+    password: c.env.BASIC_PASSWORD,
+  })(c, next),
+);
 
 app.use(renderer);
 
