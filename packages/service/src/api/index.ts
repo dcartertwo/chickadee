@@ -21,13 +21,16 @@ app.get("/", (c) => {
 
 app.post(
   "/events",
-  zValidator("json", z.object({ d: z.string(), u: z.string().url() })),
+  zValidator(
+    "json",
+    z.object({ d: z.string(), u: z.string().url(), r: z.string() })
+  ),
   async (c) => {
-    const { d: domain, u } = c.req.valid("json");
+    const { d: domain, u, r: referrer } = c.req.valid("json");
     const url = new URL(u);
     const host = url.host;
     const pathname = url.pathname;
-    console.debug("DEBUG body", { domain, url, host, pathname });
+    console.debug("DEBUG body", { domain, url, host, pathname, referrer });
 
     // HonoRequest: https://hono.dev/docs/api/request
     const userAgent = c.req.header("User-Agent");
@@ -60,7 +63,7 @@ app.post(
     // Connection Info: https://hono.dev/docs/helpers/conninfo
     const info = getConnInfo(c);
     const ip = info.remote.address;
-    console.debug("DEBUG conninfo", { ip });
+    console.debug("DEBUG connInfo", { ip });
 
     // Write event to Analytics Engine.
     // * Limits: https://developers.cloudflare.com/analytics/analytics-engine/limits/
