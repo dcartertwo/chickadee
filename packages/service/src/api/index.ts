@@ -11,7 +11,7 @@ const app = new Hono<Env>();
 app.use(
   cors({
     origin: (origin) => origin, // allow all origins
-    allowMethods: ["POST"],
+    allowMethods: ["OPTIONS", "POST"],
   })
 );
 
