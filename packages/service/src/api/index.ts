@@ -10,20 +10,12 @@ const app = new Hono<Env>();
 // cors
 app.use(
   cors({
-    origin: (origin) => origin, // allow all origins
-    allowMethods: ["OPTIONS", "POST"],
-    allowHeaders: [
-      "Content-Type",
-      "Accept",
-      "Origin",
-      "Referer",
-      "User-Agent",
-      "Sec-Fetch-Dest",
-      "Sec-Fetch-Mode",
-      "Sec-Fetch-Site",
-    ],
-    exposeHeaders: ["Content-Length"],
-    maxAge: 600, // 10 minutes
+    origin: (origin) => {
+      console.debug("DEBUG origin", { origin });
+      console.info("INFO origin", { origin });
+      return origin;
+    }, // allow all origins
+    allowMethods: ["OPTIONS", "GET", "POST"],
   })
 );
 
