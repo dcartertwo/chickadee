@@ -1,7 +1,7 @@
 async function trackPageView() {
   const ep = new URL(`/api/events`, document.currentScript.src);
 
-  const d = "test.com"; // TODO!
+  const d = window.location.hostname;
   const u = window.location.href;
   const r = document.referrer;
   const body = { d, u, r };
