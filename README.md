@@ -27,3 +27,4 @@ Monorepo:
 - [ ] favicon on LP and dashboard
 - [ ] dashboard with graphs and stuff
 - [ ] cli for easy deployment
+- [ ] live-mode
