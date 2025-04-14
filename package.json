@@ -4,6 +4,7 @@
   "description": "Cloudflare-powered, self-managed, open-source analytics",
   "scripts": {
     "service": "pnpm --filter @chickadee/service",
+    "web": "pnpm --filter @chickadee/web",
     "build": "turbo run build",
     "check": "turbo run check",
     "check-types": "turbo run check-types",

@@ -1,0 +1,13 @@
+
+name = "chickadee-web"
+compatibility_date = "2025-04-14"
+compatibility_flags = ["nodejs_compat"]
+
+pages_build_output_dir = "./dist"
+
+[observability]
+enabled = true
+head_sampling_rate = 1.0
+
+[placement]
+mode = "smart"
