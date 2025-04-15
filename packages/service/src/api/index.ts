@@ -176,8 +176,8 @@ const ZDataPoint = z.object({
   loadTime: z.number().optional(), // double-2
 
   // Flag
-  isBot: z.boolean().optional(), // double-3
-  newVisitor: z.boolean().optional(), // double-4
+  isBot: z.coerce.boolean().optional(), // double-3
+  newVisitor: z.coerce.boolean().optional(), // double-4
   bounce: z.number().min(-1).max(1).optional(), // double-5
 });
 type IDataPoint = z.infer<typeof ZDataPoint>;
