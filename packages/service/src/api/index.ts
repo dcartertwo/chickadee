@@ -219,20 +219,7 @@ function toAnalyticsEngineDataPoint(
   };
 }
 
-// helpers
-
-const DAILY_SALT_KEY = "SALT";
-
-async function getDailySalt(c: Context<Env>) {
-  const salt = await c.env.KV.get(DAILY_SALT_KEY);
-  if (salt) return salt;
-
-  // Generate new salt, expire at end-of-day
-  const newSalt = crypto.randomUUID();
-  const expiration = Math.floor(getMidnight().getTime() / 1000) + 86400;
-  await c.env.KV.put(DAILY_SALT_KEY, newSalt, { expiration });
-  return newSalt;
-}
+// helpers - datetime
 
 function getMidnight() {
   const now = new Date();
@@ -251,6 +238,21 @@ function isToday(date: Date) {
 
 function getTS(date: Date) {
   return Math.floor(date.getTime() / 1000);
+}
+
+// helpers - crypto
+
+const DAILY_SALT_KEY = "SALT";
+
+async function getDailySalt(c: Context<Env>) {
+  const salt = await c.env.KV.get(DAILY_SALT_KEY);
+  if (salt) return salt;
+
+  // Generate new salt, expire at end-of-day
+  const newSalt = crypto.randomUUID();
+  const expiration = Math.floor(getMidnight().getTime() / 1000) + 86400;
+  await c.env.KV.put(DAILY_SALT_KEY, newSalt, { expiration });
+  return newSalt;
 }
 
 async function hash(input: string) {
