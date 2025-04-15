@@ -26,17 +26,17 @@ app.use(
   })
 );
 
-// POST events
-app.post(
+// GET events
+app.get(
   "/events",
   zValidator(
-    "json",
+    "query",
     z.object({
       d: z.string().describe("Domain"),
       u: z.string().url().describe("URL"),
       r: z.string().describe("Referrer"),
-      w: z.number().describe("Screen Width in px"),
-      t: z.number().describe("Load Time in ms"),
+      w: z.coerce.number().describe("Screen Width in px"),
+      t: z.coerce.number().describe("Load Time in ms"),
     })
   ),
   async (c) => {
@@ -48,7 +48,7 @@ app.post(
         r: referrer,
         w: width,
         t: loadTime,
-      } = c.req.valid("json");
+      } = c.req.valid("query");
       const url = new URL(u);
 
       // HonoRequest: https://hono.dev/docs/api/request
@@ -150,7 +150,7 @@ app.post(
       c.header("Pragma", "no-cache");
       c.header("Expires", midnight.toUTCString());
       c.header("Last-Modified", nextDate.toUTCString());
-      return c.body(arrayBuffer, 200);
+      return c.body(uintArray, 200);
 
       // return c.json({ success: true }, 200);
     } catch (err) {

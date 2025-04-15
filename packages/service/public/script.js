@@ -9,13 +9,17 @@ async function trackPageView() {
   const body = { d, u, r, w, t };
   console.log("Chickadees Page View:", ep, body);
 
+  const params = new URLSearchParams();
+  params.set("d", d);
+  params.set("u", u);
+  params.set("r", r);
+  params.set("w", w);
+  params.set("t", t);
+
   try {
     const res = await fetch(ep, {
-      method: "POST",
-      body: JSON.stringify(body),
-      headers: {
-        "Content-Type": "application/json",
-      },
+      method: "GET",
+      query: params,
     });
     const data = await res.text();
     console.log("Chickadee ->", data);
