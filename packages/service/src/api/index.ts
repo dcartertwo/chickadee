@@ -5,6 +5,7 @@ import type { Env } from "..";
 import { cors } from "hono/cors";
 import { UAParser } from "ua-parser-js";
 import { getConnInfo } from "hono/cloudflare-workers";
+import { parseAcceptLanguage } from "intl-parse-accept-language";
 
 // The Events Endpoint uses these solutions for determining daily visitor count:
 // 1. Daily Visitor Hash: hash(daily salt + domain + IP + user agent + language)
@@ -53,7 +54,9 @@ app.post(
       const url = new URL(u);
 
       // HonoRequest: https://hono.dev/docs/api/request
-      const language = c.req.header("Accept-Language");
+      const acceptLanguage = c.req.header("Accept-Language");
+      const locales = acceptLanguage ? parseAcceptLanguage(acceptLanguage) : [];
+      const locale = locales.length > 0 ? locales[0] : undefined;
       const userAgent = c.req.header("User-Agent");
       const ua = userAgent ? UAParser(userAgent) : undefined;
 
@@ -73,7 +76,7 @@ app.post(
       const salt = await getDailySalt(c);
       const dailyVisitorHash =
         ip && userAgent
-          ? await hash([salt, domain, ip, userAgent, language].join(":"))
+          ? await hash([salt, domain, ip, userAgent, acceptLanguage].join(":"))
           : undefined;
 
       // Cache Hit Counter
@@ -109,7 +112,7 @@ app.post(
         os: ua?.os.name,
         osVersion: ua?.os.version,
         device: ua ? ua.device.type ?? "desktop" : undefined, // default to desktop: https://github.com/faisalman/ua-parser-js/issues/182
-        language,
+        locale,
 
         // Daily Visitor Hash
         dailyVisitorHash,
@@ -165,7 +168,7 @@ const ZDataPoint = z.object({
   device: z.string().optional(), // blob-15
 
   // Headers
-  language: z.string().optional(), // blob-16
+  locale: z.string().optional(), // blob-16
 
   // Daily Visitor Hash
   dailyVisitorHash: z.instanceof(ArrayBuffer).optional(), // blob-20
@@ -210,7 +213,7 @@ function toAnalyticsEngineDataPoint(
       data.device ?? null, // blob-15
 
       // Headers
-      data.language ?? null, // blob-16
+      data.locale ?? null, // blob-16
 
       // Empty
       null, // blob-17
