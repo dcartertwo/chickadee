@@ -78,6 +78,7 @@ app.post(
           : undefined;
 
       // Cache Hit Counter
+      console.info("DEBUG All Headers", { headers: c.req.header() }); // DEBUG
       const modifiedSince = c.req.header("If-Modified-Since");
       console.info(`DEBUG modifiedSince "${modifiedSince}"`); // DEBUG
       const date = modifiedSince ? new Date(modifiedSince) : null;
@@ -86,7 +87,7 @@ app.post(
       const newVisitor = hit === 0;
       const bounce = hit === 0 ? 1 : hit === 1 ? -1 : 0;
       const nextDate = new Date(midnight.getTime() + hit * 1000);
-      console.info(`DEBUG nextDate "${nextDate}"`); // DEBUG
+      console.info(`DEBUG nextDate "${nextDate.toUTCString()}"`); // DEBUG
       c.header("Cache-Control", "no-cache");
       c.header("Last-Modified", nextDate.toUTCString());
 
