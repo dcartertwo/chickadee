@@ -21,6 +21,13 @@ TODO! how to deploy chickadee
 - `BASIC_PASSWORD` - the password for basic auth to access the dashboard
 - `CLOUDFLARE_API_TOKEN` - Cloudflare account token with "Access: Analytics" Read permission: <https://developers.cloudflare.com/analytics/analytics-engine/get-started/#create-an-api-token>
 
+## Inspired by
+
+- <http://plausible.io>
+- <https://counterscale.dev>
+- <https://withcabin.com>
+- <https://matomo.org>
+
 ## TODOs
 
 - [ ] website landing page
