@@ -147,6 +147,8 @@ app.post(
       c.header("Content-Type", "image/gif");
       c.header("Content-Length", gifLength.toString());
       c.header("Cache-Control", "no-cache");
+      c.header("Pragma", "no-cache");
+      c.header("Expires", midnight.toUTCString());
       c.header("Last-Modified", nextDate.toUTCString());
       return c.body(arrayBuffer, 200);
 
