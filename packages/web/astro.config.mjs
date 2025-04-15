@@ -12,7 +12,7 @@ export default defineConfig({
   }),
   integrations: [
     starlight({
-      title: "Chickadee Docs",
+      title: "Chickadee",
     }),
   ],
 });

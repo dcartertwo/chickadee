@@ -1,5 +1,5 @@
 ---
-title: Chickadee docs
+title: Chickadee
 description: Learn more about chickadee in this docs site built with Starlight.
 ---
 
