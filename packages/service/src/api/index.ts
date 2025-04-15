@@ -79,6 +79,7 @@ app.post(
 
       // Cache Hit Counter
       const modifiedSince = c.req.header("If-Modified-Since");
+      console.info("DEBUG modifiedSince", modifiedSince); // DEBUG
       const date = modifiedSince ? new Date(modifiedSince) : null;
       const midnight = getMidnight();
       const hit = date && isToday(date) ? getTS(date) - getTS(midnight) : 0;
