@@ -15,6 +15,7 @@ export interface Bindings {
 
   // Bindings
   ENGINE?: AnalyticsEngineDataset;
+  KV: KVNamespace;
 }
 
 export interface Env extends HonoEnv {

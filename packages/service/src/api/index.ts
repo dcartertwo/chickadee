@@ -1,9 +1,18 @@
-import { Hono } from "hono";
+import { type Context, Hono } from "hono";
 import { z } from "zod";
 import { zValidator } from "@hono/zod-validator";
 import type { Env } from "..";
 import { cors } from "hono/cors";
 import { UAParser } from "ua-parser-js";
+import { getConnInfo } from "hono/cloudflare-workers";
+
+// The Events Endpoint uses these compliant solutions for determining daily visitor count:
+// 1. Daily Visitor Hash: hash(daily salt + domain + IP + user agent)
+//  - https://plausible.io/data-policy#how-we-count-unique-users-without-cookies
+// 2. Incrementing Hit Count in Last-Modified Header
+//  - https://docs.withcabin.com/#unique-visitors-without-cookies
+//  - https://notes.normally.com/cookieless-unique-visitor-counts/
+//  - https://github.com/benvinegar/counterscale/blob/v3/packages/server/app/analytics/collect.ts
 
 const app = new Hono<Env>();
 
@@ -46,6 +55,27 @@ app.post(
 
       // CF Request Properties: https://developers.cloudflare.com/workers/runtime-apis/request/#incomingrequestcfproperties
       const cf = c.req.raw.cf as IncomingRequestCfProperties | undefined;
+      // CF Bot Management: https://developers.cloudflare.com/bots/concepts/bot-score/
+      const isBot =
+        cf &&
+        (cf.botManagement.verifiedBot ||
+          (cf.botManagement.score > 0 && cf.botManagement.score < 30));
+
+      // Connection Info
+      const info = getConnInfo(c);
+      const ip = info.remote.address;
+
+      // Daily Visitor Hash
+      const salt = await getDailySalt(c);
+      const dailyVisitorHash =
+        ip && userAgent
+          ? await hash([salt, domain, ip, userAgent].join(":"))
+          : undefined;
+
+      // Cache Hit Counter // TODO!
+      const newVisitor = undefined;
+      const newSession = undefined;
+      const bounce = undefined;
 
       // Build data point
       const data: IDataPoint = {
@@ -70,11 +100,18 @@ app.post(
         osVersion: ua?.os.version,
         device: ua ? ua.device.type ?? "desktop" : undefined, // default to desktop: https://github.com/faisalman/ua-parser-js/issues/182
 
-        // CF Bot Management: https://developers.cloudflare.com/bots/concepts/bot-score/
-        isBot:
-          cf &&
-          (cf.botManagement.verifiedBot ||
-            (cf.botManagement.score > 0 && cf.botManagement.score < 30)),
+        // Daily Visitor Hash
+        dailyVisitorHash,
+
+        // Metrics
+        width,
+        loadTime,
+
+        // Flags
+        isBot,
+        newVisitor,
+        newSession,
+        bounce,
       };
 
       // Write data point to Analytics Engine.
@@ -117,12 +154,18 @@ const ZDataPoint = z.object({
   osVersion: z.string().optional(), // blob-14
   device: z.string().optional(), // blob-15
 
+  // Daily Visitor Hash
+  dailyVisitorHash: z.instanceof(ArrayBuffer).optional(), // blob-16
+
   // Metrics
   width: z.number().optional(), // double-1
   loadTime: z.number().optional(), // double-2
 
   // Flag
   isBot: z.boolean().optional(), // double-3
+  newVisitor: z.boolean().optional(), // double-4
+  newSession: z.boolean().optional(), // double-5
+  bounce: z.number().optional(), // double-6
 });
 type IDataPoint = z.infer<typeof ZDataPoint>;
 
@@ -153,6 +196,9 @@ function toAnalyticsEngineDataPoint(
       data.os ?? null, // blob-13
       data.osVersion ?? null, // blob-14
       data.device ?? null, // blob-15
+
+      // Daily Visitor Hash
+      data.dailyVisitorHash ?? null, // blob-16
     ],
     // max 20 doubles
     doubles: [
@@ -162,8 +208,40 @@ function toAnalyticsEngineDataPoint(
 
       // Flag
       data.isBot ? 1 : 0, // double-3
+      data.newVisitor ? 1 : 0, // double-4
+      data.newSession ? 1 : 0, // double-5
+      data.bounce ?? 0, // double-6
     ],
   };
 }
 
+// helpers
+
+const DAILY_SALT_KEY = "SALT";
+
+async function getDailySalt(c: Context<Env>) {
+  const salt = await c.env.KV.get(DAILY_SALT_KEY);
+  if (salt) return salt;
+
+  // Generate new salt, expire at end-of-day
+  const newSalt = crypto.randomUUID();
+  const expiration = Math.floor(getMidnight().getTime() / 1000) + 86400;
+  await c.env.KV.put(DAILY_SALT_KEY, newSalt, { expiration });
+  return newSalt;
+}
+
+function getMidnight() {
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+  return now;
+}
+
+async function hash(input: string) {
+  return await crypto.subtle.digest(
+    { name: "SHA-256" },
+    new TextEncoder().encode(input)
+  );
+}
+
+// export
 export default app;

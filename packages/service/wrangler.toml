@@ -13,6 +13,10 @@ BASIC_USERNAME = "admin"
 binding = "ENGINE"
 dataset = "chickadee"
 
+[[kv_namespaces]]
+binding = "KV"
+id = "59b4b7859e5c472ea94a4a3e47d050e4"
+
 [observability]
 enabled = true
 head_sampling_rate = 1.0
