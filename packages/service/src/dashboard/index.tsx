@@ -20,6 +20,7 @@ app.get("/", (c) => {
     <article class="prose lg:prose-xl">
       <h1>Hello!</h1>
     </article>,
+    { title: "Chickadee Dashboard" },
   );
 });
 
