@@ -40,7 +40,7 @@ app.post(
   ),
   async (c) => {
     try {
-      console.debug("DEBUG Headers", c.req.header()); // DEBUG
+      console.info("DEBUG Headers", c.req.header()); // DEBUG
 
       // Request Body
       const {
