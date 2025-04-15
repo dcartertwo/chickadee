@@ -41,8 +41,6 @@ app.post(
   ),
   async (c) => {
     try {
-      console.info("DEBUG Headers", c.req.header()); // DEBUG
-
       // Request Body
       const {
         d: domain,
