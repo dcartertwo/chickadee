@@ -10,7 +10,7 @@ Monorepo:
 
 ## Deploy your Own
 
-<!-- TODO! how to deploy chickadee -->
+TODO! how to deploy chickadee
 
 ## Development
 
