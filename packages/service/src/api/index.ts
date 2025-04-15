@@ -79,15 +79,16 @@ app.post(
 
       // Cache Hit Counter
       const modifiedSince = c.req.header("If-Modified-Since");
-      console.info("DEBUG modifiedSince", modifiedSince); // DEBUG
+      console.info(`DEBUG modifiedSince "${modifiedSince}"`); // DEBUG
       const date = modifiedSince ? new Date(modifiedSince) : null;
       const midnight = getMidnight();
       const hit = date && isToday(date) ? getTS(date) - getTS(midnight) : 0;
       const newVisitor = hit === 0;
       const bounce = hit === 0 ? 1 : hit === 1 ? -1 : 0;
       const nextDate = new Date(midnight.getTime() + hit * 1000);
-      c.header("Last-Modified", nextDate.toUTCString());
+      console.info(`DEBUG nextDate "${nextDate}"`); // DEBUG
       c.header("Cache-Control", "no-cache");
+      c.header("Last-Modified", nextDate.toUTCString());
 
       // Build data point
       const data: IDataPoint = {
