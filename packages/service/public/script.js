@@ -4,7 +4,9 @@ async function trackPageView() {
   const d = window.location.hostname;
   const u = window.location.href;
   const r = document.referrer;
-  const body = { d, u, r };
+  const w = window.screen.width; // device screen width
+  const t = performance.now(); // load time of the page
+  const body = { d, u, r, w, t };
   console.log("Chickadees Page View:", ep, body);
 
   try {

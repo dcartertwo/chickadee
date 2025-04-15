@@ -12,7 +12,7 @@ app.use(
   cors({
     origin: "*", // allow all origins
     allowMethods: ["OPTIONS", "GET", "POST"],
-  }),
+  })
 );
 
 // POST events
@@ -20,12 +20,24 @@ app.post(
   "/events",
   zValidator(
     "json",
-    z.object({ d: z.string(), u: z.string().url(), r: z.string() }),
+    z.object({
+      d: z.string().describe("Domain"),
+      u: z.string().url().describe("URL"),
+      r: z.string().describe("Referrer"),
+      w: z.number().describe("Screen Width in px"),
+      t: z.number().describe("Load Time in ms"),
+    })
   ),
   async (c) => {
     try {
       // Request Body
-      const { d: domain, u, r: referrer } = c.req.valid("json");
+      const {
+        d: domain,
+        u,
+        r: referrer,
+        w: width,
+        t: loadTime,
+      } = c.req.valid("json");
       const url = new URL(u);
 
       // HonoRequest: https://hono.dev/docs/api/request
@@ -52,12 +64,11 @@ app.post(
         timezone: cf?.timezone,
 
         // User Agent
-        userAgent,
         browser: ua?.browser.name,
         browserVersion: ua?.browser.version,
         os: ua?.os.name,
         osVersion: ua?.os.version,
-        device: ua ? (ua.device.type ?? "desktop") : undefined, // default to desktop: https://github.com/faisalman/ua-parser-js/issues/182
+        device: ua ? ua.device.type ?? "desktop" : undefined, // default to desktop: https://github.com/faisalman/ua-parser-js/issues/182
 
         // CF Bot Management: https://developers.cloudflare.com/bots/concepts/bot-score/
         isBot:
@@ -77,7 +88,7 @@ app.post(
       console.error(err);
       return c.text("Internal Server Error", 500);
     }
-  },
+  }
 );
 
 // Data Point Schema
@@ -100,20 +111,23 @@ const ZDataPoint = z.object({
   timezone: z.string().optional(), // blob-10
 
   // User Agent
-  userAgent: z.string().optional(), // blob-11
-  browser: z.string().optional(), // blob-12
-  browserVersion: z.string().optional(), // blob-13
-  os: z.string().optional(), // blob-14
-  osVersion: z.string().optional(), // blob-15
-  device: z.string().optional(), // blob-16
+  browser: z.string().optional(), // blob-11
+  browserVersion: z.string().optional(), // blob-12
+  os: z.string().optional(), // blob-13
+  osVersion: z.string().optional(), // blob-14
+  device: z.string().optional(), // blob-15
+
+  // Metrics
+  width: z.number().optional(), // double-1
+  loadTime: z.number().optional(), // double-2
 
   // Flag
-  isBot: z.boolean().optional(), // double-1
+  isBot: z.boolean().optional(), // double-3
 });
 type IDataPoint = z.infer<typeof ZDataPoint>;
 
 function toAnalyticsEngineDataPoint(
-  data: IDataPoint,
+  data: IDataPoint
 ): AnalyticsEngineDataPoint {
   return {
     // max 1 index, 96 bytes
@@ -134,15 +148,21 @@ function toAnalyticsEngineDataPoint(
       data.timezone ?? null, // blob-10
 
       // User Agent
-      data.userAgent ?? null, // blob-11
-      data.browser ?? null, // blob-12
-      data.browserVersion ?? null, // blob-13
-      data.os ?? null, // blob-14
-      data.osVersion ?? null, // blob-15
-      data.device ?? null, // blob-16
+      data.browser ?? null, // blob-11
+      data.browserVersion ?? null, // blob-12
+      data.os ?? null, // blob-13
+      data.osVersion ?? null, // blob-14
+      data.device ?? null, // blob-15
     ],
     // max 20 doubles
-    doubles: [data.isBot ? 1 : 0], // double-1
+    doubles: [
+      // Metrics
+      data.width ?? 0, // double-1
+      data.loadTime ?? 0, // double-2
+
+      // Flag
+      data.isBot ? 1 : 0, // double-3
+    ],
   };
 }
 
