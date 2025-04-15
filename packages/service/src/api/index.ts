@@ -134,7 +134,23 @@ app.post(
         c.env.ENGINE.writeDataPoint(toAnalyticsEngineDataPoint(data));
       else console.info("EVENT", data);
 
-      return c.json({ success: true }, 200);
+      // FIXME! it's not caching
+      // DEBUG trying with gif
+      const gif = "R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
+      const gifData = atob(gif);
+      const gifLength = gifData.length;
+      const arrayBuffer = new ArrayBuffer(gifLength);
+      const uintArray = new Uint8Array(arrayBuffer);
+      for (let i = 0; i < gifLength; i++) {
+        uintArray[i] = gifData.charCodeAt(i);
+      }
+      c.header("Content-Type", "image/gif");
+      c.header("Content-Length", gifLength.toString());
+      c.header("Cache-Control", "no-cache");
+      c.header("Last-Modified", nextDate.toUTCString());
+      return c.body(arrayBuffer, 200);
+
+      // return c.json({ success: true }, 200);
     } catch (err) {
       console.error(err);
       return c.json({ success: false }, 500);
