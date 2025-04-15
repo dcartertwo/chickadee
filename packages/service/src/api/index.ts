@@ -10,7 +10,7 @@ import { parseAcceptLanguage } from "intl-parse-accept-language";
 // The Events Endpoint uses these solutions for determining daily visitor count:
 // 1. Daily Visitor Hash: hash(daily salt + domain + IP + user agent + language)
 //  - https://plausible.io/data-policy#how-we-count-unique-users-without-cookies
-// 2. Incrementing Hit Count in Last-Modified Header
+// 2. Incrementing Hit Count in Last-Modified Header (deprecated)
 //  - https://docs.withcabin.com/#unique-visitors-without-cookies
 //  - https://notes.normally.com/cookieless-unique-visitor-counts/
 //  - https://github.com/benvinegar/counterscale/blob/v3/packages/server/app/analytics/collect.ts
@@ -26,17 +26,17 @@ app.use(
   })
 );
 
-// GET events
-app.get(
+// POSTevents
+app.post(
   "/events",
   zValidator(
-    "query",
+    "json",
     z.object({
       d: z.string().describe("Domain"),
       u: z.string().url().describe("URL"),
       r: z.string().describe("Referrer"),
-      w: z.coerce.number().describe("Screen Width in px"),
-      t: z.coerce.number().describe("Load Time in ms"),
+      w: z.number().describe("Screen Width in px"),
+      t: z.number().describe("Load Time in ms"),
     })
   ),
   async (c) => {
@@ -48,7 +48,7 @@ app.get(
         r: referrer,
         w: width,
         t: loadTime,
-      } = c.req.valid("query");
+      } = c.req.valid("json");
       const url = new URL(u);
 
       // HonoRequest: https://hono.dev/docs/api/request
@@ -76,20 +76,6 @@ app.get(
         ip && userAgent
           ? await hash([salt, domain, ip, userAgent, acceptLanguage].join(":"))
           : undefined;
-
-      // Cache Hit Counter
-      console.info("DEBUG All Headers", { headers: c.req.header() }); // DEBUG
-      const modifiedSince = c.req.header("If-Modified-Since");
-      console.info(`DEBUG modifiedSince "${modifiedSince}"`); // DEBUG
-      const date = modifiedSince ? new Date(modifiedSince) : null;
-      const midnight = getMidnight();
-      const hit = date && isToday(date) ? getTS(date) - getTS(midnight) : 0;
-      const newVisitor = hit === 0;
-      const bounce = hit === 0 ? 1 : hit === 1 ? -1 : 0;
-      const nextDate = new Date(midnight.getTime() + hit * 1000);
-      console.info(`DEBUG nextDate "${nextDate.toUTCString()}"`); // DEBUG
-      c.header("Cache-Control", "no-cache");
-      c.header("Last-Modified", nextDate.toUTCString());
 
       // Build data point
       const data: IDataPoint = {
@@ -124,8 +110,6 @@ app.get(
 
         // Flags
         isBot,
-        newVisitor,
-        bounce,
       };
 
       // Write data point to Analytics Engine.
@@ -134,28 +118,10 @@ app.get(
         c.env.ENGINE.writeDataPoint(toAnalyticsEngineDataPoint(data));
       else console.info("EVENT", data);
 
-      // FIXME! it's not caching
-      // DEBUG trying with gif
-      const gif = "R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
-      const gifData = atob(gif);
-      const gifLength = gifData.length;
-      const arrayBuffer = new ArrayBuffer(gifLength);
-      const uintArray = new Uint8Array(arrayBuffer);
-      for (let i = 0; i < gifLength; i++) {
-        uintArray[i] = gifData.charCodeAt(i);
-      }
-      c.header("Content-Type", "image/gif");
-      c.header("Content-Length", gifLength.toString());
-      c.header("Cache-Control", "no-cache");
-      c.header("Pragma", "no-cache");
-      c.header("Expires", midnight.toUTCString());
-      c.header("Last-Modified", nextDate.toUTCString());
-      return c.body(uintArray, 200);
-
-      // return c.json({ success: true }, 200);
+      return c.text("ok", 200);
     } catch (err) {
       console.error(err);
-      return c.json({ success: false }, 500);
+      return c.text("Internal Server Error", 500);
     }
   }
 );
@@ -198,8 +164,6 @@ const ZDataPoint = z.object({
 
   // Flag
   isBot: z.coerce.boolean().optional(), // double-3
-  newVisitor: z.coerce.boolean().optional(), // double-4
-  bounce: z.number().min(-1).max(1).optional(), // double-5
 });
 type IDataPoint = z.infer<typeof ZDataPoint>;
 
@@ -250,34 +214,17 @@ function toAnalyticsEngineDataPoint(
 
       // Flag
       data.isBot ? 1 : 0, // double-3
-      data.newVisitor ? 1 : 0, // double-4
-      data.bounce ?? 0, // double-5
     ],
   };
 }
 
-// helpers - datetime
+// helpers
 
 function getMidnight() {
   const now = new Date();
   now.setHours(0, 0, 0, 0);
   return now;
 }
-
-function isToday(date: Date) {
-  const now = new Date();
-  return (
-    date.getDate() === now.getDate() &&
-    date.getMonth() === now.getMonth() &&
-    date.getFullYear() === now.getFullYear()
-  );
-}
-
-function getTS(date: Date) {
-  return Math.floor(date.getTime() / 1000);
-}
-
-// helpers - crypto
 
 const DAILY_SALT_KEY = "SALT";
 

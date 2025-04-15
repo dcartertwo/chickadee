@@ -7,21 +7,18 @@ async function trackPageView() {
   const w = window.screen.width; // device screen width
   const t = performance.now(); // load time of the page
   const body = { d, u, r, w, t };
-  console.log("Chickadees Page View:", ep, body);
-
-  const params = new URLSearchParams();
-  params.set("d", d);
-  params.set("u", u);
-  params.set("r", r);
-  params.set("w", w);
-  params.set("t", t);
+  console.debug("Chickadees Page View:", ep, body);
 
   try {
-    const res = await fetch(ep + "?" + params.toString(), {
-      method: "GET",
+    const res = await fetch(ep, {
+      method: "POST",
+      body: JSON.stringify(body),
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
     const data = await res.text();
-    console.log("Chickadee ->", data);
+    console.debug("Chickadee ->", data);
   } catch (err) {
     console.error("Chickadee Error:", err);
   }
