@@ -6,13 +6,14 @@ import { cors } from "hono/cors";
 import { UAParser } from "ua-parser-js";
 import { getConnInfo } from "hono/cloudflare-workers";
 
-// The Events Endpoint uses these compliant solutions for determining daily visitor count:
+// The Events Endpoint uses these solutions for determining daily visitor count:
 // 1. Daily Visitor Hash: hash(daily salt + domain + IP + user agent)
 //  - https://plausible.io/data-policy#how-we-count-unique-users-without-cookies
 // 2. Incrementing Hit Count in Last-Modified Header
 //  - https://docs.withcabin.com/#unique-visitors-without-cookies
 //  - https://notes.normally.com/cookieless-unique-visitor-counts/
 //  - https://github.com/benvinegar/counterscale/blob/v3/packages/server/app/analytics/collect.ts
+//  - https://news.ycombinator.com/item?id=33802683
 
 const app = new Hono<Env>();
 
