@@ -17,9 +17,8 @@ async function trackPageView() {
   params.set("t", t);
 
   try {
-    const res = await fetch(ep, {
+    const res = await fetch(ep + "?" + params.toString(), {
       method: "GET",
-      query: params,
     });
     const data = await res.text();
     console.log("Chickadee ->", data);
