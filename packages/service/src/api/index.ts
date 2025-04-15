@@ -12,7 +12,7 @@ app.use(
   cors({
     origin: "*", // allow all origins
     allowMethods: ["OPTIONS", "GET", "POST"],
-  })
+  }),
 );
 
 // POST events
@@ -20,7 +20,7 @@ app.post(
   "/events",
   zValidator(
     "json",
-    z.object({ d: z.string(), u: z.string().url(), r: z.string() })
+    z.object({ d: z.string(), u: z.string().url(), r: z.string() }),
   ),
   async (c) => {
     try {
@@ -57,7 +57,7 @@ app.post(
         browserVersion: ua?.browser.version,
         os: ua?.os.name,
         osVersion: ua?.os.version,
-        device: ua ? ua.device.type ?? "desktop" : undefined, // default to desktop: https://github.com/faisalman/ua-parser-js/issues/182
+        device: ua ? (ua.device.type ?? "desktop") : undefined, // default to desktop: https://github.com/faisalman/ua-parser-js/issues/182
 
         // CF Bot Management: https://developers.cloudflare.com/bots/concepts/bot-score/
         isBot:
@@ -77,7 +77,7 @@ app.post(
       console.error(err);
       return c.text("Internal Server Error", 500);
     }
-  }
+  },
 );
 
 // Data Point Schema
@@ -113,7 +113,7 @@ const ZDataPoint = z.object({
 type IDataPoint = z.infer<typeof ZDataPoint>;
 
 function toAnalyticsEngineDataPoint(
-  data: IDataPoint
+  data: IDataPoint,
 ): AnalyticsEngineDataPoint {
   return {
     // max 1 index, 96 bytes
