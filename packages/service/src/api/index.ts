@@ -73,10 +73,16 @@ app.post(
           ? await hash([salt, domain, ip, userAgent].join(":"))
           : undefined;
 
-      // Cache Hit Counter // TODO!
-      const newVisitor = undefined;
-      const newSession = undefined;
-      const bounce = undefined;
+      // Cache Hit Counter
+      const modifiedSince = c.req.header("If-Modified-Since");
+      const date = modifiedSince ? new Date(modifiedSince) : null;
+      const midnight = getMidnight();
+      const hit = date && isToday(date) ? getTS(date) - getTS(midnight) : 0;
+      const newVisitor = hit === 0;
+      const bounce = hit === 0 ? 1 : hit === 1 ? -1 : 0;
+      const nextDate = new Date(midnight.getTime() + hit * 1000);
+      c.header("Last-Modified", nextDate.toUTCString());
+      c.header("Cache-Control", "no-cache");
 
       // Build data point
       const data: IDataPoint = {
@@ -111,7 +117,6 @@ app.post(
         // Flags
         isBot,
         newVisitor,
-        newSession,
         bounce,
       };
 
@@ -121,10 +126,10 @@ app.post(
         c.env.ENGINE.writeDataPoint(toAnalyticsEngineDataPoint(data));
       else console.info("EVENT", data);
 
-      return c.text("ok", 200);
+      return c.json({ success: true }, 200);
     } catch (err) {
       console.error(err);
-      return c.text("Internal Server Error", 500);
+      return c.json({ success: false }, 500);
     }
   }
 );
@@ -165,8 +170,7 @@ const ZDataPoint = z.object({
   // Flag
   isBot: z.boolean().optional(), // double-3
   newVisitor: z.boolean().optional(), // double-4
-  newSession: z.boolean().optional(), // double-5
-  bounce: z.number().optional(), // double-6
+  bounce: z.number().min(-1).max(1).optional(), // double-5
 });
 type IDataPoint = z.infer<typeof ZDataPoint>;
 
@@ -210,8 +214,7 @@ function toAnalyticsEngineDataPoint(
       // Flag
       data.isBot ? 1 : 0, // double-3
       data.newVisitor ? 1 : 0, // double-4
-      data.newSession ? 1 : 0, // double-5
-      data.bounce ?? 0, // double-6
+      data.bounce ?? 0, // double-5
     ],
   };
 }
@@ -235,6 +238,19 @@ function getMidnight() {
   const now = new Date();
   now.setHours(0, 0, 0, 0);
   return now;
+}
+
+function isToday(date: Date) {
+  const now = new Date();
+  return (
+    date.getDate() === now.getDate() &&
+    date.getMonth() === now.getMonth() &&
+    date.getFullYear() === now.getFullYear()
+  );
+}
+
+function getTS(date: Date) {
+  return Math.floor(date.getTime() / 1000);
 }
 
 async function hash(input: string) {
