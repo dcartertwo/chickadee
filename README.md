@@ -1,6 +1,6 @@
 # 🐦 Chickadee
 
-Chickadee is a self-managed, open-source website analytics tool built with Cloudflare.
+Chickadee is a self-managed, open-source website analytics tool running on a Cloudflare Worker.
 
 Monorepo:
 
