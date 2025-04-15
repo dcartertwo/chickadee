@@ -7,7 +7,7 @@ import { UAParser } from "ua-parser-js";
 import { getConnInfo } from "hono/cloudflare-workers";
 
 // The Events Endpoint uses these solutions for determining daily visitor count:
-// 1. Daily Visitor Hash: hash(daily salt + domain + IP + user agent)
+// 1. Daily Visitor Hash: hash(daily salt + domain + IP + user agent + language)
 //  - https://plausible.io/data-policy#how-we-count-unique-users-without-cookies
 // 2. Incrementing Hit Count in Last-Modified Header
 //  - https://docs.withcabin.com/#unique-visitors-without-cookies
@@ -51,6 +51,7 @@ app.post(
       const url = new URL(u);
 
       // HonoRequest: https://hono.dev/docs/api/request
+      const language = c.req.header("Accept-Language");
       const userAgent = c.req.header("User-Agent");
       const ua = userAgent ? UAParser(userAgent) : undefined;
 
@@ -70,7 +71,7 @@ app.post(
       const salt = await getDailySalt(c);
       const dailyVisitorHash =
         ip && userAgent
-          ? await hash([salt, domain, ip, userAgent].join(":"))
+          ? await hash([salt, domain, ip, userAgent, language].join(":"))
           : undefined;
 
       // Cache Hit Counter
@@ -106,6 +107,7 @@ app.post(
         os: ua?.os.name,
         osVersion: ua?.os.version,
         device: ua ? ua.device.type ?? "desktop" : undefined, // default to desktop: https://github.com/faisalman/ua-parser-js/issues/182
+        language,
 
         // Daily Visitor Hash
         dailyVisitorHash,
@@ -160,8 +162,11 @@ const ZDataPoint = z.object({
   osVersion: z.string().optional(), // blob-14
   device: z.string().optional(), // blob-15
 
+  // Headers
+  language: z.string().optional(), // blob-16
+
   // Daily Visitor Hash
-  dailyVisitorHash: z.instanceof(ArrayBuffer).optional(), // blob-16
+  dailyVisitorHash: z.instanceof(ArrayBuffer).optional(), // blob-20
 
   // Metrics
   width: z.number().optional(), // double-1
@@ -202,8 +207,16 @@ function toAnalyticsEngineDataPoint(
       data.osVersion ?? null, // blob-14
       data.device ?? null, // blob-15
 
+      // Headers
+      data.language ?? null, // blob-16
+
+      // Empty
+      null, // blob-17
+      null, // blob-18
+      null, // blob-19
+
       // Daily Visitor Hash
-      data.dailyVisitorHash ?? null, // blob-16
+      data.dailyVisitorHash ?? null, // blob-20
     ],
     // max 20 doubles
     doubles: [
