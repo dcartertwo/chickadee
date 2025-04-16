@@ -85,7 +85,7 @@ app.post(
 
         // Location
         country: cf?.country ?? null,
-        region: cf?.regionCode ?? null,
+        region: cf?.region ?? null,
         city: cf?.city ?? null,
         timezone: cf?.timezone ?? null,
 
