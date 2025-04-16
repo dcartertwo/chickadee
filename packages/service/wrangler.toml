@@ -7,7 +7,6 @@ directory = "dist"
 
 [vars]
 ENVIRONMENT = "production"
-ACCOUNT_ID = "TBD"
 BASIC_USERNAME = "admin"
 
 [[analytics_engine_datasets]]
