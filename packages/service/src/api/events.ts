@@ -245,12 +245,14 @@ async function getDailySalt(c: Context<Env>) {
 }
 
 async function hash(input: string): Promise<string> {
+  // hash input
   const digest = await crypto.subtle.digest(
     { name: "SHA-256" },
     new TextEncoder().encode(input)
   );
-  const text = new TextDecoder().decode(digest);
-  return text;
+  // convert to base64 string
+  const hashed = btoa(String.fromCharCode(...new Uint8Array(digest)));
+  return hashed;
 }
 
 // export
