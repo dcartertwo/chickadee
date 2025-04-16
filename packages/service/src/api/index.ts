@@ -26,31 +26,35 @@ app.post(
   zValidator(
     "json",
     z.object({
+      e: z.string().describe("Event Name").optional().default("view"),
       d: z.string().describe("Domain"),
       u: z.string().url().describe("URL"),
-      r: z.string().describe("Referrer"),
-      w: z.number().describe("Screen Width in px"),
-      t: z.number().describe("Load Time in ms"),
+      r: z.string().describe("Referrer").optional(),
+      w: z.number().describe("Screen Width in px").optional(),
+      t: z.number().describe("Load Time in ms").optional(),
+      uid: z.string().describe("User ID").optional(), // TODO allow setting uid (requires consent)
     })
   ),
   async (c) => {
     try {
       // Request Body
       const {
-        d: domain,
+        e: evt,
+        d: sid,
         u,
-        r: referrer,
+        r: ref,
         w: width,
         t: loadTime,
+        uid,
       } = c.req.valid("json");
       const url = new URL(u);
 
       // HonoRequest: https://hono.dev/docs/api/request
       const acceptLanguage = c.req.header("Accept-Language");
       const locales = acceptLanguage ? parseAcceptLanguage(acceptLanguage) : [];
-      const locale = locales.length > 0 ? locales[0] : undefined;
+      const locale = locales.length > 0 ? locales[0] : null;
       const userAgent = c.req.header("User-Agent");
-      const ua = userAgent ? UAParser(userAgent) : undefined;
+      const ua = userAgent ? UAParser(userAgent) : null;
 
       // CF Request Properties: https://developers.cloudflare.com/workers/runtime-apis/request/#incomingrequestcfproperties
       const cf = c.req.raw.cf as IncomingRequestCfProperties | undefined;
@@ -68,42 +72,46 @@ app.post(
       const salt = await getDailySalt(c);
       const dailyVisitorHash =
         ip && userAgent
-          ? await hash([salt, domain, ip, userAgent, acceptLanguage].join(":"))
-          : undefined;
+          ? await hash([salt, sid, ip, userAgent, acceptLanguage].join(":"))
+          : null;
 
       // Build data point
       const data: IDataPoint = {
-        domain,
-        host: url.host,
-        pathname: url.pathname,
-        search: url.search,
+        sid,
+        evt,
+        ref: ref ?? null,
+        path: url.pathname,
         hash: url.hash,
-        referrer,
 
         // Location
-        country: cf?.country,
-        region: cf?.regionCode,
-        city: cf?.city,
-        location: `${cf?.latitude},${cf?.longitude}`,
-        timezone: cf?.timezone,
+        country: cf?.country ?? null,
+        region: cf?.regionCode ?? null,
+        city: cf?.city ?? null,
+        timezone: cf?.timezone ?? null,
 
-        // User Agent
-        browser: ua?.browser.name,
-        browserVersion: ua?.browser.version,
-        os: ua?.os.name,
-        osVersion: ua?.os.version,
-        device: ua ? ua.device.type ?? "desktop" : undefined, // default to desktop: https://github.com/faisalman/ua-parser-js/issues/182
+        // headers
+        browser: ua?.browser.name ?? null,
+        browserVersion: ua?.browser.version ?? null,
+        os: ua?.os.name ?? null,
+        osVersion: ua?.os.version ?? null,
+        device: ua ? ua.device.type ?? "desktop" : null, // default to desktop: https://github.com/faisalman/ua-parser-js/issues/182
         locale,
 
-        // Daily Visitor Hash
+        // UTM
+        utmSource: url.searchParams.get("utm_source"),
+        utmCampaign: url.searchParams.get("utm_campaign"),
+        utmMedium: url.searchParams.get("utm_medium"),
+
+        // User
+        uid: uid ?? null,
         dailyVisitorHash,
 
         // Metrics
-        width,
-        loadTime,
+        width: width ?? null,
+        loadTime: loadTime ?? null,
 
         // Flags
-        isBot,
+        isBot: isBot ?? null,
       };
 
       // Write data point to Analytics Engine.
@@ -123,82 +131,85 @@ app.post(
 // Data Point Schema
 
 const ZDataPoint = z.object({
-  domain: z.string(), // index-1
-
-  // Basic
-  host: z.string(), // blob-1
-  pathname: z.string(), // blob-2
-  search: z.string().optional(), // blob-3
-  hash: z.string().optional(), // blob-4
-  referrer: z.string(), // blob-5
+  sid: z.string(), // blob-1
+  evt: z.string(), // blob-2
+  ref: z.string().nullable(), // blob-3
+  path: z.string(), // blob-4
+  hash: z.string().nullable(), // blob-5
 
   // Location
-  country: z.string().optional(), // blob-6
-  region: z.string().optional(), // blob-7
-  city: z.string().optional(), // blob-8
-  location: z.string().optional(), // blob-9
-  timezone: z.string().optional(), // blob-10
-
-  // User Agent
-  browser: z.string().optional(), // blob-11
-  browserVersion: z.string().optional(), // blob-12
-  os: z.string().optional(), // blob-13
-  osVersion: z.string().optional(), // blob-14
-  device: z.string().optional(), // blob-15
+  country: z.string().nullable(), // blob-6
+  region: z.string().nullable(), // blob-7
+  city: z.string().nullable(), // blob-8
+  timezone: z.string().nullable(), // blob-9
 
   // Headers
-  locale: z.string().optional(), // blob-16
+  browser: z.string().nullable(), // blob-10
+  browserVersion: z.string().nullable(), // blob-11
+  os: z.string().nullable(), // blob-12
+  osVersion: z.string().nullable(), // blob-13
+  device: z.string().nullable(), // blob-14
+  locale: z.string().nullable(), // blob-15
 
-  // Daily Visitor Hash
-  dailyVisitorHash: z.instanceof(ArrayBuffer).optional(), // blob-20
+  // UTM
+  utmSource: z.string().nullable(), // blob-16
+  utmCampaign: z.string().nullable(), // blob-17
+  utmMedium: z.string().nullable(), // blob-18
+
+  // User
+  uid: z.string().nullable(), // blob-19
+  dailyVisitorHash: z.instanceof(ArrayBuffer).nullable(), // blob-20
 
   // Metrics
-  width: z.number().optional(), // double-1
-  loadTime: z.number().optional(), // double-2
+  width: z.number().nullable(), // double-1
+  loadTime: z.number().nullable(), // double-2
 
   // Flag
-  isBot: z.coerce.boolean().optional(), // double-3
+  isBot: z.coerce.boolean().nullable(), // double-3
 });
 type IDataPoint = z.infer<typeof ZDataPoint>;
 
 function toAnalyticsEngineDataPoint(
   data: IDataPoint
 ): AnalyticsEngineDataPoint {
+  // 96 bytes max
+  const index = [data.sid.substring(0, 60), data.evt.substring(0, 30)].join(
+    ","
+  );
+
   return {
     // max 1 index, 96 bytes
-    indexes: [data.domain],
+    indexes: [index],
     // max 20 blobs, total 5120 bytes
     blobs: [
-      data.host, // blob-1
-      data.pathname, // blob-2
-      data.search ?? null, // blob-3
-      data.hash ?? null, // blob-4
-      data.referrer, // blob-5
+      data.sid, // blob-1
+      data.evt, // blob-2
+      data.ref, // blob-3
+      data.path, // blob-4
+      data.hash ?? null, // blob-5
 
       // Location
       data.country ?? null, // blob-6
       data.region ?? null, // blob-7
       data.city ?? null, // blob-8
-      data.location ?? null, // blob-9
-      data.timezone ?? null, // blob-10
-
-      // User Agent
-      data.browser ?? null, // blob-11
-      data.browserVersion ?? null, // blob-12
-      data.os ?? null, // blob-13
-      data.osVersion ?? null, // blob-14
-      data.device ?? null, // blob-15
+      data.timezone ?? null, // blob-9
 
       // Headers
-      data.locale ?? null, // blob-16
+      data.browser ?? null, // blob-10
+      data.browserVersion ?? null, // blob-11
+      data.os ?? null, // blob-12
+      data.osVersion ?? null, // blob-13
+      data.device ?? null, // blob-14
+      data.locale ?? null, // blob-15
 
-      // Empty
-      null, // blob-17
-      null, // blob-18
-      null, // blob-19
+      // UTM
+      data.utmSource ?? null, // blob-16
+      data.utmCampaign ?? null, // blob-17
+      data.utmMedium ?? null, // blob-18
 
-      // Daily Visitor Hash
-      data.dailyVisitorHash ?? null, // blob-20
+      // User
+      data.dailyVisitorHash ?? null, // blob-19
+      data.uid ?? null, // blob-20
     ],
     // max 20 doubles
     doubles: [
