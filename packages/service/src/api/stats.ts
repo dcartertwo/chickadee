@@ -14,8 +14,8 @@ app.use(
 );
 
 // get stats for dashboard
-app.get("/", (c) => {
-  return c.json(getStats(c));
+app.get("/", async (c) => {
+  return c.json(await getStats(c));
 });
 
 // helpers
