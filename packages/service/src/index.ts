@@ -11,7 +11,8 @@ export interface Bindings {
   BASIC_USERNAME: string;
   BASIC_PASSWORD: string;
   // Cloudflare
-  CLOUDFLARE_API_TOKEN: string;
+  ACCOUNT_ID: string;
+  API_TOKEN: string;
 
   // Bindings
   ENGINE?: AnalyticsEngineDataset;
