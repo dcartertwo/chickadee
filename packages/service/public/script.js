@@ -1,7 +1,7 @@
 async function trackPageView() {
   const ep = new URL(`/api/events`, document.currentScript.src);
 
-  const d = window.location.hostname; // TODO configure on script tag?
+  const d = window.location.hostname; // TODO configure on script-tag?
   const u = window.location.href;
   const r = document.referrer;
   const w = window.screen.width; // device screen width
