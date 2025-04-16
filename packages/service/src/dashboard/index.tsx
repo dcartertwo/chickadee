@@ -17,9 +17,17 @@ app.use(renderer);
 app.get("/", (c) => {
   // TODO! dashboard
   return c.render(
-    <article class="prose lg:prose-xl">
-      <h1>Hello!</h1>
-    </article>,
+    <div class="w-full min-h-full flex flex-col">
+      <div class="navbar bg-base-100 shadow-sm">
+        <a class="btn btn-ghost text-xl" href="/">
+          Chickadee
+        </a>
+      </div>
+
+      <article class="prose lg:prose-xl">
+        <h1>Hello!</h1>
+      </article>
+    </div>,
   );
 });
 
