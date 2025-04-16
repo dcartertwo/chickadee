@@ -27,7 +27,7 @@ async function getStats(c: Context<Env>) {
     `
     SELECT *
     FROM chickadee
-    WHERE timestamp > NOW() - INTERVAL '7' DAY AND timestamp > toDateTime('2025-04-15 10:30:00')
+    WHERE timestamp > NOW() - INTERVAL '7' DAY AND timestamp > toDateTime('2025-04-16 12:30:00')
     ORDER BY timestamp DESC
     `
   );

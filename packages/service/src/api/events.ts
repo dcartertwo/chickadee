@@ -158,7 +158,7 @@ const ZDataPoint = z.object({
 
   // User
   uid: z.string().nullable(), // blob-19
-  dailyVisitorHash: z.instanceof(ArrayBuffer).nullable(), // blob-20
+  dailyVisitorHash: z.string().nullable(), // blob-20
 
   // Metrics
   width: z.number().nullable(), // double-1
@@ -244,11 +244,13 @@ async function getDailySalt(c: Context<Env>) {
   return newSalt;
 }
 
-async function hash(input: string) {
-  return await crypto.subtle.digest(
+async function hash(input: string): Promise<string> {
+  const digest = await crypto.subtle.digest(
     { name: "SHA-256" },
     new TextEncoder().encode(input)
   );
+  const text = new TextDecoder().decode(digest);
+  return text;
 }
 
 // export
