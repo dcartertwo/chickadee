@@ -5,6 +5,7 @@ import type { Env } from "..";
 
 const app = new Hono<Env>();
 
+// auth
 app.use((c, next) =>
   basicAuth({
     username: c.env.BASIC_USERNAME,

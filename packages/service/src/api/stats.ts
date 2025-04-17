@@ -1,8 +1,17 @@
 import { type Context, Hono } from "hono";
 import type { Bindings, Env } from "..";
 import { cors } from "hono/cors";
+import { basicAuth } from "hono/basic-auth";
 
 const app = new Hono<Env>();
+
+// auth
+app.use((c, next) =>
+  basicAuth({
+    username: c.env.BASIC_USERNAME,
+    password: c.env.BASIC_PASSWORD,
+  })(c, next)
+);
 
 // cors
 app.use(
