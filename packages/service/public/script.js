@@ -1,13 +1,14 @@
 async function trackPageView() {
-  const ep = new URL(`/api/events`, document.currentScript.src);
+  const script = document.currentScript;
+  const ep = new URL(`/api/events`, script.src);
 
-  const d = window.location.hostname; // TODO configure on script-tag?
+  const d = script.getAttribute("data-domain") ?? window.location.hostname;
   const u = window.location.href;
   const r = document.referrer;
   const w = window.screen.width; // device screen width
   const t = performance.now(); // load time of the page
   const body = { d, u, r, w, t };
-  console.debug("Chickadees Page View:", ep.href, body);
+  console.debug("Chickadee Page View:", ep.href, body);
 
   try {
     const res = await fetch(ep, {
