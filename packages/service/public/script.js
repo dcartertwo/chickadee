@@ -2,7 +2,9 @@ async function trackPageView() {
   const script = document.currentScript;
   const ep = new URL(`/api/events`, script.src);
 
-  const d = script.getAttribute("data-domain") ?? window.location.hostname;
+  const d = (
+    script.getAttribute("data-domain") ?? window.location.hostname
+  ).toLowerCase();
   const u = window.location.href;
   const r = document.referrer;
   const w = window.screen.width; // device screen width
