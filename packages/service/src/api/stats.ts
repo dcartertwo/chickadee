@@ -2,6 +2,9 @@ import { type Context, Hono } from "hono";
 import type { Bindings, Env } from "..";
 import { cors } from "hono/cors";
 import { basicAuth } from "hono/basic-auth";
+import { z } from "zod";
+import { zValidator } from "@hono/zod-validator";
+import SQLString from "sqlstring";
 
 const app = new Hono<Env>();
 
@@ -23,20 +26,40 @@ app.use(
 );
 
 // get stats for dashboard
-app.get("/", async (c) => {
-  return c.json(await getStats(c));
-});
+app.get(
+  "/:domain",
+  zValidator(
+    "param",
+    z.object({
+      domain: z
+        .string()
+        .toLowerCase()
+        .regex(/^[a-z0-9.-]+$/),
+    })
+  ),
+  async (c) => {
+    const { domain } = c.req.valid("param");
+    try {
+      return c.json(await getStats(c, domain));
+    } catch (err) {
+      console.error("getStats - Error:", err);
+      return c.text("Internal Server Error", 500);
+    }
+  }
+);
 
 // helpers
 
 // TODO! how to query?
-async function getStats(c: Context<Env>) {
+async function getStats(c: Context<Env>, domain: string) {
   const data = await query(
     c.env,
     `
     SELECT *
     FROM chickadee
-    WHERE timestamp > NOW() - INTERVAL '7' DAY AND timestamp > toDateTime('2025-04-16 12:30:00')
+    WHERE
+      timestamp > NOW() - INTERVAL '7' DAY AND
+      blob1 = ${SQLString.escape(domain)}
     ORDER BY timestamp DESC
     `
   );
@@ -48,6 +71,8 @@ async function query(
   env: Pick<Bindings, "ACCOUNT_ID" | "API_TOKEN">,
   query: string
 ) {
+  console.debug("query()", query);
+
   const ep = `https://api.cloudflare.com/client/v4/accounts/${env.ACCOUNT_ID}/analytics_engine/sql`;
   const res = await fetch(ep, {
     method: "POST",
@@ -59,9 +84,7 @@ async function query(
 
   // handle error
   if (!res.ok) {
-    const err = await res.text();
-    console.error("query - Error:", err);
-    throw err;
+    throw new Error(await res.text());
   }
 
   // return data
