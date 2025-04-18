@@ -71,10 +71,13 @@ app.post(
 
       // Daily Visitor Hash
       const salt = await getDailySalt(c);
-      const dailyVisitorHash =
-        ip && userAgent
-          ? await hash([salt, sid, ip, userAgent, acceptLanguage].join(":"))
-          : null;
+      console.debug("DEBUG hashInput1", { ip, userAgent, acceptLanguage });
+      const hashInput =
+        ip && userAgent ? [salt, sid, ip, userAgent, acceptLanguage] : null;
+      console.debug("DEBUG hashInput2", hashInput);
+      const dailyVisitorHash = hashInput
+        ? await hash(hashInput.join(":"))
+        : null;
 
       // Build data point
       const data: IDataPoint = {
