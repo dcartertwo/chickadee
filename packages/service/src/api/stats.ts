@@ -5,6 +5,7 @@ import { basicAuth } from "hono/basic-auth";
 import { z } from "zod";
 import { zValidator } from "@hono/zod-validator";
 import SQLString from "sqlstring";
+import { Column } from "../lib/datapoint";
 
 const app = new Hono<Env>();
 
@@ -27,20 +28,20 @@ app.use(
 
 // get stats for dashboard
 app.get(
-  "/:domain",
+  "/:sid",
   zValidator(
     "param",
     z.object({
-      domain: z
+      sid: z
         .string()
         .toLowerCase()
         .regex(/^[a-z0-9.-]+$/),
     })
   ),
   async (c) => {
-    const { domain } = c.req.valid("param");
+    const { sid } = c.req.valid("param");
     try {
-      return c.json(await getStats(c, domain, "7d", "day"));
+      return c.json(await getStats(c, sid));
     } catch (err) {
       console.error("getStats - Error:", err);
       return c.text("Internal Server Error", 500);
@@ -70,21 +71,43 @@ function getTimeframeInterval(timeframe: Timeframe): string {
   }
 }
 
+function getGranularityInterval(granularity: Granularity): string {
+  switch (granularity) {
+    case "month":
+      return "1 MONTH";
+    case "week":
+      return "1 WEEK";
+    case "day":
+      return "1 DAY";
+    case "hour":
+      return "1 HOUR";
+    default:
+      throw new Error(`Invalid granularity: ${granularity}`);
+  }
+}
+
 async function getStats(
   c: Context<Env>,
-  domain: string,
+  sid: string,
   timeframe: Timeframe = "7d",
   granularity: Granularity = "day"
 ) {
   const interval = getTimeframeInterval(timeframe);
+  const group = getGranularityInterval(granularity);
+
   const data = await query(
     c.env,
     `
-    SELECT *
+    SELECT
+      toStartOfInterval(timestamp, INTERVAL '${group}') as timestamp,
+      sum(_sample_interval) as views,
+      count(DISTINCT ${Column.index}) as unique_visitors
     FROM chickadee
     WHERE
-      timestamp > NOW() - INTERVAL '${interval}' AND
-      blob1 = ${SQLString.escape(domain)}
+      ${Column.sid} = ${SQLString.escape(sid)} AND
+      ${Column.evt} = 'view' AND
+      timestamp > now() - INTERVAL '${interval}'
+    GROUP BY timestamp
     ORDER BY timestamp DESC
     `
   );
@@ -117,5 +140,3 @@ async function query(
   console.debug("query ->", data);
   return data;
 }
-
-export default app;
