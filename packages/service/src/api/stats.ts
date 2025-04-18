@@ -142,7 +142,7 @@ function createQueryResultSchema<T extends z.ZodTypeAny>(dataSchema: T) {
       .array(),
     data: z.array(dataSchema),
     rows: z.number(),
-    rows_before_limit_at_least: z.number(),
+    rows_before_limit_at_least: z.number().optional(),
   });
 }
 
