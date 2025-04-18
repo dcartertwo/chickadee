@@ -57,15 +57,15 @@ type Granularity = "month" | "week" | "day" | "hour";
 function getTimeframeInterval(timeframe: Timeframe): string {
   switch (timeframe) {
     case "today":
-      return "1 DAY";
+      return "'1' DAY";
     case "yesterday":
-      return "2 DAY";
+      return "'2' DAY";
     case "7d":
-      return "7 DAY";
+      return "'7' DAY";
     case "30d":
-      return "30 DAY";
+      return "'30' DAY";
     case "90d":
-      return "90 DAY";
+      return "'90' DAY";
     default:
       throw new Error(`Invalid timeframe: ${timeframe}`);
   }
@@ -74,16 +74,22 @@ function getTimeframeInterval(timeframe: Timeframe): string {
 function getGranularityInterval(granularity: Granularity): string {
   switch (granularity) {
     case "month":
-      return "1 MONTH";
+      return "'1' MONTH";
     case "week":
-      return "1 WEEK";
+      return "'1' WEEK";
     case "day":
-      return "1 DAY";
+      return "'1' DAY";
     case "hour":
-      return "1 HOUR";
+      return "'1' HOUR";
     default:
       throw new Error(`Invalid granularity: ${granularity}`);
   }
+}
+
+interface IStat {
+  timestamp: string;
+  views: number;
+  visitors: number;
 }
 
 async function getStats(
@@ -95,22 +101,22 @@ async function getStats(
   const interval = getTimeframeInterval(timeframe);
   const group = getGranularityInterval(granularity);
 
-  const data = await query(
+  const data = (await query(
     c.env,
     `
     SELECT
-      toStartOfInterval(timestamp, INTERVAL '${group}') as timestamp,
+      toStartOfInterval(timestamp, INTERVAL ${group}) as timestamp,
       sum(_sample_interval) as views,
-      count(DISTINCT ${Column.index}) as unique_visitors
+      count(DISTINCT ${Column.dailyVisitorHash}) as visitors
     FROM chickadee
     WHERE
       ${Column.sid} = ${SQLString.escape(sid)} AND
       ${Column.evt} = 'view' AND
-      timestamp > now() - INTERVAL '${interval}'
+      timestamp > now() - INTERVAL ${interval}
     GROUP BY timestamp
     ORDER BY timestamp DESC
     `
-  );
+  )) as IStat[];
   console.debug("getStats - data:", data);
   return { data };
 }
@@ -140,3 +146,5 @@ async function query(
   console.debug("query ->", data);
   return data;
 }
+
+export default app;
