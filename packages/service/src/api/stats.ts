@@ -28,11 +28,11 @@ app.use(
 
 // debug
 app.get("/debug", async (c) => {
-  const data = await query(
+  const res = await query(
     c.env,
     "SELECT * FROM chickadee ORDER BY timestamp DESC LIMIT 10"
   );
-  return c.json({ data });
+  return c.json(res);
 });
 
 // get stats for dashboard
@@ -95,22 +95,23 @@ function getGranularityInterval(granularity: Granularity): string {
   }
 }
 
-interface IStat {
-  timestamp: string;
-  views: number;
-  visitors: number;
-}
+const ZStat = z.object({
+  timestamp: z.coerce.date(),
+  views: z.coerce.number(),
+  visitors: z.coerce.number(),
+});
+type IStat = z.infer<typeof ZStat>;
 
 async function getStats(
   c: Context<Env>,
   sid: string,
   timeframe: Timeframe = "7d",
   granularity: Granularity = "day"
-) {
+): Promise<IStat[]> {
   const interval = getTimeframeInterval(timeframe);
   const group = getGranularityInterval(granularity);
 
-  const data = (await query(
+  const { data } = await query(
     c.env,
     `
     SELECT
@@ -124,15 +125,31 @@ async function getStats(
       timestamp > now() - INTERVAL ${interval}
     GROUP BY timestamp
     ORDER BY timestamp ASC
-    `
-  )) as IStat[];
+    `,
+    ZStat
+  );
   console.debug("getStats - data:", data);
-  return { data };
+  return data;
 }
 
-async function query(
+function createQueryResultSchema<T extends z.ZodTypeAny>(dataSchema: T) {
+  return z.object({
+    meta: z
+      .object({
+        name: z.string(),
+        type: z.string(),
+      })
+      .array(),
+    data: z.array(dataSchema),
+    rows: z.number(),
+    rows_before_limit_at_least: z.number(),
+  });
+}
+
+async function query<T extends z.ZodTypeAny>(
   env: Pick<Bindings, "ACCOUNT_ID" | "API_TOKEN">,
-  query: string
+  query: string,
+  dataSchema?: T
 ) {
   console.debug("query()", query);
 
@@ -151,9 +168,10 @@ async function query(
   }
 
   // return data
-  const data = await res.json();
-  console.debug("query ->", data);
-  return data;
+  const result = await res.json();
+  console.debug("query ->", result);
+  const parsed = createQueryResultSchema(dataSchema ?? z.any()).parse(result);
+  return parsed;
 }
 
 export default app;
