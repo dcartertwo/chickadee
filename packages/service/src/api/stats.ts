@@ -123,7 +123,7 @@ async function getStats(
       ${Column.evt} = 'view' AND
       timestamp > now() - INTERVAL ${interval}
     GROUP BY timestamp
-    ORDER BY timestamp DESC
+    ORDER BY timestamp ASC
     `
   )) as IStat[];
   console.debug("getStats - data:", data);
