@@ -40,7 +40,7 @@ app.get(
   async (c) => {
     const { domain } = c.req.valid("param");
     try {
-      return c.json(await getStats(c, domain));
+      return c.json(await getStats(c, domain, "7d", "day"));
     } catch (err) {
       console.error("getStats - Error:", err);
       return c.text("Internal Server Error", 500);
@@ -50,15 +50,40 @@ app.get(
 
 // helpers
 
-// TODO! how to query?
-async function getStats(c: Context<Env>, domain: string) {
+type Timeframe = "today" | "yesterday" | "7d" | "30d" | "90d";
+type Granularity = "month" | "week" | "day" | "hour";
+
+function getTimeframeInterval(timeframe: Timeframe): string {
+  switch (timeframe) {
+    case "today":
+      return "1 DAY";
+    case "yesterday":
+      return "2 DAY";
+    case "7d":
+      return "7 DAY";
+    case "30d":
+      return "30 DAY";
+    case "90d":
+      return "90 DAY";
+    default:
+      throw new Error(`Invalid timeframe: ${timeframe}`);
+  }
+}
+
+async function getStats(
+  c: Context<Env>,
+  domain: string,
+  timeframe: Timeframe = "7d",
+  granularity: Granularity = "day"
+) {
+  const interval = getTimeframeInterval(timeframe);
   const data = await query(
     c.env,
     `
     SELECT *
     FROM chickadee
     WHERE
-      timestamp > NOW() - INTERVAL '7' DAY AND
+      timestamp > NOW() - INTERVAL '${interval}' AND
       blob1 = ${SQLString.escape(domain)}
     ORDER BY timestamp DESC
     `
