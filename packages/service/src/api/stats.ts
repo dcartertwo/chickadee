@@ -26,6 +26,15 @@ app.use(
   })
 );
 
+// debug
+app.get("/debug", async (c) => {
+  const data = await query(
+    c.env,
+    "SELECT * FROM chickadee ORDER BY timestamp DESC LIMIT 10"
+  );
+  return c.json({ data });
+});
+
 // get stats for dashboard
 app.get(
   "/:sid",

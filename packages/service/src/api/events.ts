@@ -107,8 +107,8 @@ app.post(
         utmMedium: url.searchParams.get("utm_medium"),
 
         // User
-        uid: uid ?? null,
         dailyVisitorHash,
+        uid: uid ?? null,
 
         // Metrics
         width: width ?? null,

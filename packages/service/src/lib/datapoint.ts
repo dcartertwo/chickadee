@@ -27,8 +27,8 @@ export const ZDataPoint = z.object({
   utmMedium: z.string().nullable(), // blob-18
 
   // User
-  uid: z.string().nullable(), // blob-19
-  dailyVisitorHash: z.string().nullable(), // blob-20
+  dailyVisitorHash: z.string().nullable(), // blob-19
+  uid: z.string().nullable(), // blob-20
 
   // Metrics
   width: z.number().nullable(), // double-1
@@ -66,8 +66,8 @@ export const Column = {
   utmCampaign: "blob17",
   utmMedium: "blob18",
   // User
-  uid: "blob19",
-  dailyVisitorHash: "blob20",
+  dailyVisitorHash: "blob19",
+  uid: "blob20",
 
   // doubles
   // Metrics
