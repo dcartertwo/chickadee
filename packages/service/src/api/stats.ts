@@ -95,6 +95,11 @@ function getGranularityInterval(granularity: Granularity): string {
   }
 }
 
+// TODO! dimensions: ref, UTM, path, country, region, city, timezone, browser, os, device, locale
+// TODO metrics: width, loadTime
+
+// TODO! filter stats by dimensions
+
 const ZStat = z.object({
   timestamp: z.coerce.date(),
   views: z.coerce.number(),
