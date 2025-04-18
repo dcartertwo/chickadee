@@ -2,6 +2,7 @@ import { Hono } from "hono";
 import { renderer } from "./renderer";
 import { basicAuth } from "hono/basic-auth";
 import type { Env } from "..";
+import { Footer, Header } from "./common";
 
 const app = new Hono<Env>();
 
@@ -18,16 +19,16 @@ app.use(renderer);
 app.get("/", (c) => {
   // TODO! dashboard
   return c.render(
-    <div class="w-full min-h-full flex flex-col">
-      <div class="navbar bg-base-100 shadow-sm">
-        <a class="btn btn-ghost text-xl" href="/">
-          Chickadee
-        </a>
-      </div>
+    <div class="h-dvh flex flex-col">
+      <Header />
 
-      <article class="prose lg:prose-xl">
-        <h1>Hello!</h1>
-      </article>
+      <main class="flex-grow flex flex-col p-4 lg:p-8">
+        <article class="prose lg:prose-xl">
+          <h1>Hello!</h1>
+        </article>
+      </main>
+
+      <Footer />
     </div>,
   );
 });
