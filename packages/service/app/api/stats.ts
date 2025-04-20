@@ -3,9 +3,8 @@ import { cors } from "hono/cors";
 import { basicAuth } from "hono/basic-auth";
 import { z } from "zod";
 import { zValidator } from "@hono/zod-validator";
-import SQLString from "sqlstring";
 import { Column } from "../lib/datapoint";
-import type { Bindings } from "../global";
+import { escapeSql } from "../lib/sql";
 
 const app = new Hono();
 
@@ -125,7 +124,7 @@ async function getStats(
       count(DISTINCT ${Column.dailyVisitorHash}) as visitors
     FROM chickadee
     WHERE
-      ${Column.sid} = ${SQLString.escape(sid)} AND
+      ${Column.sid} = '${escapeSql(sid)}' AND
       ${Column.evt} = 'view' AND
       timestamp > now() - INTERVAL ${interval}
     GROUP BY timestamp

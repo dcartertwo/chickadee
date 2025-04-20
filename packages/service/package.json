@@ -16,7 +16,6 @@
     "honox": "^0.1.40",
     "intl-parse-accept-language": "^1.0.0",
     "recharts": "^2.15.3",
-    "sqlstring": "^2.3.3",
     "ua-parser-js": "^2.0.3",
     "zod": "^3.24.3"
   },
@@ -27,7 +26,6 @@
     "@hono/vite-dev-server": "^0.18.3",
     "@tailwindcss/typography": "^0.5.16",
     "@tailwindcss/vite": "^4.1.4",
-    "@types/sqlstring": "^2.3.2",
     "daisyui": "^5.0.27",
     "tailwindcss": "^4.1.4",
     "vite": "^6.3.2",
