@@ -1,97 +1,92 @@
-import type { FC } from "hono/jsx";
-import { render } from "hono/jsx/dom";
+import { useEffect, type FC } from "hono/jsx";
 import ApexCharts from "apexcharts";
 
-export const Timeline: FC = () => {
-  return <div id="timeline" />;
-};
-
-const Client: FC = () => {
-  const options = {
-    chart: {
-      height: "100%",
-      maxWidth: "100%",
-      type: "area",
-      fontFamily: "Inter, sans-serif",
-      dropShadow: {
+const Timeline: FC = () => {
+  // TODO SSR
+  useEffect(() => {
+    const options = {
+      chart: {
+        height: "100%",
+        maxWidth: "100%",
+        type: "area",
+        fontFamily: "Inter, sans-serif",
+        dropShadow: {
+          enabled: false,
+        },
+        toolbar: {
+          show: false,
+        },
+      },
+      tooltip: {
+        enabled: true,
+        x: {
+          show: false,
+        },
+      },
+      fill: {
+        type: "gradient",
+        gradient: {
+          opacityFrom: 0.55,
+          opacityTo: 0,
+          shade: "#1C64F2",
+          gradientToColors: ["#1C64F2"],
+        },
+      },
+      dataLabels: {
         enabled: false,
       },
-      toolbar: {
+      stroke: {
+        width: 6,
+      },
+      grid: {
         show: false,
+        strokeDashArray: 4,
+        padding: {
+          left: 2,
+          right: 2,
+          top: 0,
+        },
       },
-    },
-    tooltip: {
-      enabled: true,
-      x: {
-        show: false,
-      },
-    },
-    fill: {
-      type: "gradient",
-      gradient: {
-        opacityFrom: 0.55,
-        opacityTo: 0,
-        shade: "#1C64F2",
-        gradientToColors: ["#1C64F2"],
-      },
-    },
-    dataLabels: {
-      enabled: false,
-    },
-    stroke: {
-      width: 6,
-    },
-    grid: {
-      show: false,
-      strokeDashArray: 4,
-      padding: {
-        left: 2,
-        right: 2,
-        top: 0,
-      },
-    },
-    series: [
-      {
-        name: "New users",
-        data: [6500, 6418, 6456, 6526, 6356, 6456],
-        color: "#1A56DB",
-      },
-    ],
-    xaxis: {
-      categories: [
-        "01 February",
-        "02 February",
-        "03 February",
-        "04 February",
-        "05 February",
-        "06 February",
-        "07 February",
+      series: [
+        {
+          name: "New users",
+          data: [6500, 6418, 6456, 6526, 6356, 6456],
+          color: "#1A56DB",
+        },
       ],
-      labels: {
+      xaxis: {
+        categories: [
+          "01 February",
+          "02 February",
+          "03 February",
+          "04 February",
+          "05 February",
+          "06 February",
+          "07 February",
+        ],
+        labels: {
+          show: false,
+        },
+        axisBorder: {
+          show: false,
+        },
+        axisTicks: {
+          show: false,
+        },
+      },
+      yaxis: {
         show: false,
       },
-      axisBorder: {
-        show: false,
-      },
-      axisTicks: {
-        show: false,
-      },
-    },
-    yaxis: {
-      show: false,
-    },
-  };
+    };
 
-  const div = document.getElementById("area-chart");
-  if (div) {
-    const chart = new ApexCharts(div, options);
-    chart.render();
-  }
+    const div = document.getElementById("area-chart");
+    if (div) {
+      const chart = new ApexCharts(div, options);
+      chart.render();
+    }
+  }, []);
 
   return <div id="area-chart" class="h-96 w-full bg-red-500" />;
 };
 
-// client-side rendering
-const div = document.getElementById("timeline");
-if (!div) throw new Error("Div 'timeline' not found.");
-render(<Client />, div);
+export default Timeline;

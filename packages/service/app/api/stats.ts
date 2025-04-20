@@ -1,4 +1,4 @@
-import { type Context, Hono } from "hono";
+import { type Context, type Env, Hono } from "hono";
 import { cors } from "hono/cors";
 import { basicAuth } from "hono/basic-auth";
 import { z } from "zod";
@@ -6,7 +6,7 @@ import { zValidator } from "@hono/zod-validator";
 import { Column } from "../lib/datapoint";
 import { escapeSql } from "../lib/sql";
 
-const app = new Hono();
+const app = new Hono<Env>();
 
 // auth
 app.use((c, next) =>
@@ -107,7 +107,7 @@ const ZStat = z.object({
 type IStat = z.infer<typeof ZStat>;
 
 async function getStats(
-  c: Context,
+  c: Context<Env>,
   sid: string,
   timeframe: Timeframe = "7d",
   granularity: Granularity = "day"
@@ -151,7 +151,7 @@ function createQueryResultSchema<T extends z.ZodTypeAny>(dataSchema: T) {
 }
 
 async function query<T extends z.ZodTypeAny>(
-  env: Pick<Bindings, "ACCOUNT_ID" | "API_TOKEN">,
+  env: Pick<Env["Bindings"], "ACCOUNT_ID" | "API_TOKEN">,
   query: string,
   dataSchema?: T
 ) {

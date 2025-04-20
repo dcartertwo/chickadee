@@ -2,7 +2,6 @@ import { showRoutes } from "hono/dev";
 import { logger } from "hono/logger";
 import { createApp } from "honox/server";
 import api from "./api";
-import { basicAuth } from "hono/basic-auth";
 import { Hono } from "hono";
 
 const app = new Hono();
