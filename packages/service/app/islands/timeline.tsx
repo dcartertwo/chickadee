@@ -1,6 +1,8 @@
-import { useEffect, type FC } from "hono/jsx";
+import { useEffect, useRef, type FC } from "hono/jsx";
 
 const Timeline: FC = () => {
+  const chartRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     const initChart = async () => {
       const ApexCharts = (await import("apexcharts")).default;
@@ -80,9 +82,8 @@ const Timeline: FC = () => {
         },
       };
 
-      const div = document.getElementById("area-chart");
-      if (div) {
-        const chart = new ApexCharts(div, options);
+      if (chartRef.current) {
+        const chart = new ApexCharts(chartRef.current, options);
         chart.render();
       }
     };
@@ -90,7 +91,7 @@ const Timeline: FC = () => {
     initChart().catch(console.error);
   }, []);
 
-  return <div id="area-chart" class="h-96 w-full bg-red-500" />;
+  return <div ref={chartRef} class="h-96 w-full bg-red-500" />;
 };
 
 export default Timeline;
