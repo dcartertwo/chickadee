@@ -9,5 +9,23 @@ export default createRoute((c) => {
       <h1 class="text-3xl font-bold">Hello, {name}!</h1>
       <Counter />
     </div>,
+
+    // TODO! this
+
+    // <div class="h-dvh flex flex-col">
+    //   <Header />
+
+    //   <main class="flex-grow flex flex-col p-4 lg:p-8">
+    //     <article class="prose lg:prose-xl">
+    //       <h1>Hello!</h1>
+    //     </article>
+
+    //     <Stats />
+
+    //     <Timeline />
+    //   </main>
+
+    //   <Footer />
+    // </div>
   );
 });
