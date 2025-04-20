@@ -1,4 +1,4 @@
-import { type Context, type Env, Hono } from "hono";
+import { type Context, Hono } from "hono";
 import { cors } from "hono/cors";
 import { basicAuth } from "hono/basic-auth";
 import { z } from "zod";
@@ -7,7 +7,7 @@ import SQLString from "sqlstring";
 import { Column } from "../lib/datapoint";
 import type { Bindings } from "../global";
 
-const app = new Hono<Env>();
+const app = new Hono();
 
 // auth
 app.use((c, next) =>
@@ -108,7 +108,7 @@ const ZStat = z.object({
 type IStat = z.infer<typeof ZStat>;
 
 async function getStats(
-  c: Context<Env>,
+  c: Context,
   sid: string,
   timeframe: Timeframe = "7d",
   granularity: Granularity = "day"
