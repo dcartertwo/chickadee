@@ -1,7 +1,6 @@
 import { type Context, Hono } from "hono";
 import { z } from "zod";
 import { zValidator } from "@hono/zod-validator";
-import type { Env } from "..";
 import { cors } from "hono/cors";
 import { UAParser } from "ua-parser-js";
 import { getConnInfo } from "hono/cloudflare-workers";
@@ -11,7 +10,7 @@ import { toAnalyticsEngineDataPoint, type IDataPoint } from "../lib/datapoint";
 // To identify unique visitor count: hash(daily salt + domain + IP + user agent + accept language)
 // inspired by: https://plausible.io/data-policy#how-we-count-unique-users-without-cookies
 
-const app = new Hono<Env>();
+const app = new Hono();
 
 // cors
 app.use(
@@ -142,7 +141,7 @@ function getMidnight() {
 
 const DAILY_SALT_KEY = "SALT";
 
-async function getDailySalt(c: Context<Env>) {
+async function getDailySalt(c: Context) {
   const salt = await c.env.KV.get(DAILY_SALT_KEY);
   if (salt) return salt;
 

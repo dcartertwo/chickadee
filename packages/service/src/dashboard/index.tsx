@@ -2,7 +2,8 @@ import { Hono } from "hono";
 import { renderer } from "./renderer";
 import { basicAuth } from "hono/basic-auth";
 import type { Env } from "..";
-import { Footer, Header } from "./common";
+import { Footer, Header, Stats } from "./common";
+import { Timeline } from "../islands/timeline";
 
 const app = new Hono<Env>();
 
@@ -26,6 +27,11 @@ app.get("/", (c) => {
         <article class="prose lg:prose-xl">
           <h1>Hello!</h1>
         </article>
+
+        <Stats />
+
+        {/* <Timeline /> */}
+        <div id="timeline" />
       </main>
 
       <Footer />

@@ -1,5 +1,5 @@
 ---
-description: web framework
+description: api framework
 globs: 
 alwaysApply: false
 ---
