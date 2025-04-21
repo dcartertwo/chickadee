@@ -5,26 +5,17 @@ import { useRequestContext } from "hono/jsx-renderer";
 import type { Env } from "hono";
 
 const Timeline: FC<{ sid: string; tf: ITimeframe }> = async ({ sid, tf }) => {
-  // TODO! show timestamps on xaxis
-
   const c = useRequestContext<Env>();
   const timeline = await getTimeline(c, sid, tf);
 
   const options: Options = {
     responsive: true,
-    plugins: {
-      legend: {
-        position: "top" as const,
-      },
-      title: {
-        display: true,
-        text: "Chart.js Line Chart",
-      },
-    },
+    plugins: {},
   };
 
   const data: Data = {
-    labels: ["January", "February", "March", "April", "May", "June", "July"],
+    // TODO! either date or hour, depending on granularity
+    labels: timeline.map((item) => item.timestamp.toLocaleString()),
     datasets: [
       {
         label: "Views",

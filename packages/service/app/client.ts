@@ -6,9 +6,7 @@ import {
   PointElement,
   LineController,
   LineElement,
-  Title,
   Tooltip,
-  Legend,
 } from "chart.js";
 
 ChartJS.register(
@@ -17,9 +15,7 @@ ChartJS.register(
   PointElement,
   LineController,
   LineElement,
-  Title,
-  Tooltip,
-  Legend
+  Tooltip
 );
 
 createClient();
