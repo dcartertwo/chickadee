@@ -2,7 +2,7 @@ import type { FC } from "hono/jsx";
 
 const Menu: FC = () => {
   return (
-    <div class="flex flex-row gap-4 justify-between">
+    <div class="flex flex-col xs:flex-row gap-4 justify-between items-center">
       <SelectSite />
 
       <SelectTimeframe />
@@ -12,9 +12,15 @@ const Menu: FC = () => {
 export default Menu;
 
 const SelectSite: FC = () => {
+  const site = "chickadee.me"; // TODO!
+
   return (
     <details class="dropdown">
-      <summary class="btn m-1">www.chickadee.me</summary>
+      <summary class="btn m-1 space-x-1">
+        <span class="icon-[carbon--link] scale-150" />
+        <span>{site}</span>
+        <span class="icon-[carbon--caret-down]" />
+      </summary>
       <ul class="menu dropdown-content bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
         <li>
           <a>Item 1</a>
@@ -28,14 +34,22 @@ const SelectSite: FC = () => {
 };
 
 const SelectTimeframe: FC = () => {
+  const items = [
+    { label: "Today", value: "today" },
+    { label: "Yesterday", value: "yesterday" },
+    { label: "7 Days", value: "7d" },
+    { label: "30 Days", value: "30d" },
+    { label: "90 Days", value: "90d" },
+  ];
+  const selected = items[0]; // TODO!
+
   return (
     <select class="select">
-      <option disabled selected>
-        Pick a color
-      </option>
-      <option>Crimson</option>
-      <option>Amber</option>
-      <option>Velvet</option>
+      {items.map(({ label, value }) => (
+        <option key={value} value={value}>
+          {label}
+        </option>
+      ))}
     </select>
   );
 };
