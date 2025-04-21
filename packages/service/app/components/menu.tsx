@@ -42,12 +42,21 @@ const SelectTimeframe: FC<{ tf: ITimeframe }> = ({ tf }) => {
   };
 
   return (
-    <select class="select">
-      {TIMEFRAMES.map((value) => (
-        <option key={value} value={value} selected={tf === value}>
-          {labels[value]}
-        </option>
-      ))}
-    </select>
+    <details class="dropdown dropdown-end">
+      <summary class="btn m-1 space-x-1">
+        <span class="icon-[carbon--time] scale-150" />
+        <span>{labels[tf]}</span>
+        <span class="icon-[carbon--caret-down]" />
+      </summary>
+      <ul class="menu dropdown-content bg-base-200 rounded-box z-1 w-52 p-2 shadow-sm">
+        {TIMEFRAMES.map((value) => (
+          <li key={value}>
+            <a href={`?tf=${value}`} class={tf === value ? "active" : ""}>
+              {labels[value]}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </details>
   );
 };
