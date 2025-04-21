@@ -22,7 +22,7 @@
   },
   "devDependencies": {
     "@cloudflare/vite-plugin": "^0.1.21",
-    "@cloudflare/workers-types": "^4.20250420.0",
+    "@cloudflare/workers-types": "^4.20250421.0",
     "@hono/vite-build": "^1.6.0",
     "@hono/vite-dev-server": "^0.18.3",
     "@tailwindcss/typography": "^0.5.16",

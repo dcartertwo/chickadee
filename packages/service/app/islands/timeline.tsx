@@ -15,12 +15,6 @@ const Timeline: FC = () => {
         show: false,
       },
     },
-    tooltip: {
-      enabled: true,
-      x: {
-        show: false,
-      },
-    },
     fill: {
       type: "gradient",
       gradient: {
@@ -33,40 +27,11 @@ const Timeline: FC = () => {
     dataLabels: {
       enabled: false,
     },
-    stroke: {
-      width: 6,
-    },
     grid: {
       show: false,
-      strokeDashArray: 4,
-      padding: {
-        left: 2,
-        right: 2,
-        top: 0,
-      },
-    },
-    xaxis: {
-      categories: [
-        "01 February",
-        "02 February",
-        "03 February",
-        "04 February",
-        "05 February",
-        "06 February",
-        "07 February",
-      ],
-      labels: {
-        show: false,
-      },
-      axisBorder: {
-        show: false,
-      },
-      axisTicks: {
-        show: false,
-      },
     },
     yaxis: {
-      show: false,
+      min: 0,
     },
   };
 
@@ -78,7 +43,7 @@ const Timeline: FC = () => {
     },
   ];
 
-  return <Chart class="h-96 w-full bg-red-500" options={options} data={data} />;
+  return <Chart class="h-96 w-full" options={options} data={data} />;
 };
 
 export default Timeline;

@@ -1,6 +1,7 @@
 import { createRoute } from "honox/factory";
 import { Footer, Header, Stats } from "../components/common";
 import Timeline from "../islands/timeline";
+import Menu from "../components/menu";
 
 export default createRoute((c) => {
   return c.render(
@@ -8,9 +9,7 @@ export default createRoute((c) => {
       <Header />
 
       <main class="flex-grow flex flex-col p-4 lg:p-8">
-        <article class="prose lg:prose-xl">
-          <h1>Hello!</h1>
-        </article>
+        <Menu />
 
         <Stats />
 
