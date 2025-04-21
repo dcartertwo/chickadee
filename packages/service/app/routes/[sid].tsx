@@ -5,6 +5,8 @@ import Menu from "../components/menu";
 import Stats from "../components/stats";
 
 export default createRoute((c) => {
+  // TODO! check if sid exists, otherwise go to index
+
   return c.render(
     <div class="h-dvh flex flex-col">
       <Header />
