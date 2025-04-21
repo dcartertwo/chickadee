@@ -1,7 +1,8 @@
 import { createRoute } from "honox/factory";
-import { Footer, Header, Stats } from "../components/common";
+import { Footer, Header } from "../components/common";
 import Timeline from "../islands/timeline";
 import Menu from "../components/menu";
+import Stats from "../components/stats";
 
 export default createRoute((c) => {
   return c.render(
