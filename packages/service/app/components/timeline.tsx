@@ -1,6 +1,6 @@
 import type { FC } from "hono/jsx";
 import Chart, { type ChartData, type ChartOptions } from "../islands/chart";
-import { getTimeline, type ITimeframe, type ITimeline } from "../lib/db";
+import { getTimeline, type ITimeframe } from "../lib/db";
 import { useRequestContext } from "hono/jsx-renderer";
 import type { Env } from "hono";
 
