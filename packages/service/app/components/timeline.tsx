@@ -11,6 +11,14 @@ const Timeline: FC<{ sid: string; tf: ITimeframe }> = async ({ sid, tf }) => {
   const options: Options = {
     responsive: true,
     plugins: {},
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: {
+          precision: 0,
+        },
+      },
+    },
   };
 
   const data: Data = {
