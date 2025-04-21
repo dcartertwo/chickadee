@@ -73,6 +73,25 @@ function getTimeframeInterval(tf: ITimeframe): string {
   }
 }
 
+function getDefaultGranularityIntervalForTimeframe(
+  tf: ITimeframe
+): IGranularity {
+  switch (tf) {
+    case "today":
+      return "hour";
+    case "yesterday":
+      return "hour";
+    case "7d":
+      return "day";
+    case "30d":
+      return "day";
+    case "90d":
+      return "week";
+    default:
+      throw new Error(`Invalid timeframe: ${tf}`);
+  }
+}
+
 function getGranularityInterval(g: IGranularity): string {
   switch (g) {
     case "month":
@@ -138,10 +157,12 @@ export async function getTimeline(
   c: Context<Env>,
   sid: string,
   tf: ITimeframe = "7d",
-  g: IGranularity = "day"
+  g?: IGranularity
 ) {
   const interval = getTimeframeInterval(tf);
-  const group = getGranularityInterval(g);
+  const group = getGranularityInterval(
+    g ?? getDefaultGranularityIntervalForTimeframe(tf)
+  );
 
   const { data } = await query(
     c.env,
