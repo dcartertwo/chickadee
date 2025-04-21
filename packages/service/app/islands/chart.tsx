@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState, type FC } from "hono/jsx";
-import { twMerge } from "tailwind-merge";
 
 export type ChartOptions = Omit<ApexCharts.ApexOptions, "series">;
 export type ChartData = ApexAxisChartSeries | ApexNonAxisChartSeries;

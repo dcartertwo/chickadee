@@ -49,9 +49,8 @@ export async function query<T extends z.ZodTypeAny>(
 
 // * Helpers
 
-export const ZTimeframe = z
-  .enum(["today", "yesterday", "7d", "30d", "90d"])
-  .default("7d");
+export const TIMEFRAMES = ["today", "yesterday", "7d", "30d", "90d"] as const;
+export const ZTimeframe = z.enum(TIMEFRAMES).default("7d");
 export type ITimeframe = z.infer<typeof ZTimeframe>;
 
 export const ZGranularity = z.enum(["month", "week", "day", "hour"]);

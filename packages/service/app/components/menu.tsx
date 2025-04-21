@@ -1,5 +1,5 @@
 import type { FC } from "hono/jsx";
-import type { ITimeframe } from "../lib/db";
+import { TIMEFRAMES, ZTimeframe, type ITimeframe } from "../lib/db";
 
 const Menu: FC<{ sid: string; tf: ITimeframe }> = ({ sid, tf }) => {
   return (
@@ -33,20 +33,19 @@ const SelectSite: FC<{ sid: string }> = ({ sid }) => {
 };
 
 const SelectTimeframe: FC<{ tf: ITimeframe }> = ({ tf }) => {
-  // TODO take from ZTimeframe
-  const items = [
-    { label: "Today", value: "today" },
-    { label: "Yesterday", value: "yesterday" },
-    { label: "7 Days", value: "7d" },
-    { label: "30 Days", value: "30d" },
-    { label: "90 Days", value: "90d" },
-  ];
+  const labels: Record<ITimeframe, string> = {
+    today: "Today",
+    yesterday: "Yesterday",
+    "7d": "7 Days",
+    "30d": "30 Days",
+    "90d": "90 Days",
+  };
 
   return (
     <select class="select">
-      {items.map(({ label, value }) => (
+      {TIMEFRAMES.map((value) => (
         <option key={value} value={value} selected={tf === value}>
-          {label}
+          {labels[value]}
         </option>
       ))}
     </select>
