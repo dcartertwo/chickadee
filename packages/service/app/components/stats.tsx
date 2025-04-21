@@ -1,5 +1,5 @@
 import type { FC } from "hono/jsx";
-import { getStats } from "../lib/db";
+import { getStats, type ITimeframe } from "../lib/db";
 import { useRequestContext } from "hono/jsx-renderer";
 import type { Env } from "hono";
 
