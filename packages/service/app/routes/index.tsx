@@ -13,8 +13,6 @@ export default createRoute((c) => {
           <h1>Hello!</h1>
         </article>
 
-        <Counter />
-
         <Stats />
 
         <Timeline />
