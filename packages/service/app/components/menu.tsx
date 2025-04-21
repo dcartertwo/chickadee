@@ -23,7 +23,7 @@ const SelectSite: FC = () => {
         <span>{site}</span>
         <span class="icon-[carbon--caret-down]" />
       </summary>
-      <ul class="menu dropdown-content bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
+      <ul class="menu dropdown-content bg-base-200 rounded-box z-1 w-52 p-2 shadow-sm">
         {items.map((sid) => (
           <li key={sid}>
             <a href={`/${sid}`}>{sid}</a>
