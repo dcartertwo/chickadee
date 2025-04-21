@@ -12,7 +12,9 @@ const Menu: FC = () => {
 export default Menu;
 
 const SelectSite: FC = () => {
-  const site = "chickadee.me"; // TODO!
+  const items = ["chickadee.me", "test.com"];
+
+  const site = items[0]; // TODO!
 
   return (
     <details class="dropdown">
@@ -22,12 +24,11 @@ const SelectSite: FC = () => {
         <span class="icon-[carbon--caret-down]" />
       </summary>
       <ul class="menu dropdown-content bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
-        <li>
-          <a>Item 1</a>
-        </li>
-        <li>
-          <a>Item 2</a>
-        </li>
+        {items.map((sid) => (
+          <li key={sid}>
+            <a href={`/${sid}`}>{sid}</a>
+          </li>
+        ))}
       </ul>
     </details>
   );
@@ -41,6 +42,7 @@ const SelectTimeframe: FC = () => {
     { label: "30 Days", value: "30d" },
     { label: "90 Days", value: "90d" },
   ];
+
   const selected = items[0]; // TODO!
 
   return (
