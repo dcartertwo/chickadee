@@ -1,5 +1,4 @@
 import { createRoute } from "honox/factory";
-import Counter from "../islands/counter";
 import { Footer, Header, Stats } from "../components/common";
 import Timeline from "../islands/timeline";
 
