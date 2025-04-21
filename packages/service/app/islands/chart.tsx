@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState, type FC } from "hono/jsx";
+import type { ApexOptions } from "apexcharts";
 
-export type ChartOptions = Omit<ApexCharts.ApexOptions, "series">;
-export type ChartData = ApexAxisChartSeries | ApexNonAxisChartSeries;
+export type ChartOptions = Omit<ApexOptions, "series">;
+export type ChartData = ApexOptions["series"];
 
 const Chart: FC<{
   class: string;
@@ -29,7 +30,7 @@ const Chart: FC<{
     chart?.updateOptions(options);
   }, [options]);
   useEffect(() => {
-    chart?.updateSeries(data);
+    if (data) chart?.updateSeries(data);
   }, [data]);
 
   return (
