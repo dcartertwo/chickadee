@@ -127,13 +127,12 @@ export async function getStats(
 
 // * Timeline
 
-const ZTimeline = z
-  .object({
-    timestamp: z.coerce.date(),
-    views: z.coerce.number(),
-    visitors: z.coerce.number(),
-  })
-  .array();
+const ZTimelineItem = z.object({
+  timestamp: z.coerce.date(),
+  views: z.coerce.number(),
+  visitors: z.coerce.number(),
+});
+const ZTimeline = ZTimelineItem.array();
 export type ITimeline = z.infer<typeof ZTimeline>;
 
 export async function getTimeline(
@@ -160,7 +159,7 @@ export async function getTimeline(
     GROUP BY timestamp
     ORDER BY timestamp ASC
     `,
-    ZTimeline
+    ZTimelineItem
   );
   return data;
 }

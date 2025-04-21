@@ -4,7 +4,7 @@ import Timeline from "../islands/timeline";
 import Menu from "../components/menu";
 import Stats from "../components/stats";
 import { zValidator } from "@hono/zod-validator";
-import { ZTimeframe } from "../lib/db";
+import { getTimeline, ZTimeframe } from "../lib/db";
 import { z } from "zod";
 
 export default createRoute(
@@ -15,14 +15,17 @@ export default createRoute(
 
     // TODO! check if sid exists, otherwise go to index
 
+    const timeline = await getTimeline(c, sid, tf);
+    // TODO! can't pass timeline to timeline?
+
     return c.render(
       <div class="h-dvh flex flex-col">
         <Header />
 
         <main class="flex-grow flex flex-col p-4 lg:p-8">
           <Menu sid={sid} tf={tf} />
-          <Stats sid={sid} />
-          <Timeline sid={sid} />
+          <Stats sid={sid} tf={tf} />
+          <Timeline timeline={timeline} />
         </main>
 
         <Footer />

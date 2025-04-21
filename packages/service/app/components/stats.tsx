@@ -3,9 +3,9 @@ import { getStats } from "../lib/db";
 import { useRequestContext } from "hono/jsx-renderer";
 import type { Env } from "hono";
 
-const Stats: FC<{ sid: string }> = async ({ sid }) => {
+const Stats: FC<{ sid: string; tf: ITimeframe }> = async ({ sid, tf }) => {
   const c = useRequestContext<Env>();
-  const stats = await getStats(c, sid);
+  const stats = await getStats(c, sid, tf);
 
   return (
     <div class="stats shadow stats-vertical sm:stats-horizontal">

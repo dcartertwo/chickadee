@@ -1,7 +1,10 @@
 import type { FC } from "hono/jsx";
 import Chart, { type ChartData, type ChartOptions } from "../components/chart";
+import type { ITimeline } from "../lib/db";
 
-const Timeline: FC = () => {
+const Timeline: FC<{ timeline: ITimeline }> = async ({ timeline }) => {
+  // TODO! show timestamps on xaxis
+
   const options: ChartOptions = {
     chart: {
       height: "100%",
@@ -37,9 +40,14 @@ const Timeline: FC = () => {
 
   const data: ChartData = [
     {
-      name: "New users",
-      data: [6500, 6418, 6456, 6526, 6356, 6456],
+      name: "views",
+      data: timeline.map((item) => item.views),
       color: "#1A56DB",
+    },
+    {
+      name: "visitors",
+      data: timeline.map((item) => item.visitors),
+      color: "#10B981",
     },
   ];
 
