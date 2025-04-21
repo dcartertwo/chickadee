@@ -1,6 +1,12 @@
 import type { FC } from "hono/jsx";
+import { getStats } from "../lib/db";
+import { useRequestContext } from "hono/jsx-renderer";
+import type { Env } from "hono";
 
-const Stats: FC = () => {
+const Stats: FC<{ sid: string }> = async ({ sid }) => {
+  const c = useRequestContext<Env>();
+  const stats = await getStats(c, sid);
+
   return (
     <div class="stats shadow stats-vertical sm:stats-horizontal">
       {/* unique visitors */}
@@ -20,8 +26,10 @@ const Stats: FC = () => {
           </svg>
         </div>
         <div class="stat-title">Unique Visitors</div>
-        <div class="stat-value text-primary">TBD</div>
-        <div class="stat-desc">TBD% up</div>
+        <div class="stat-value text-primary">{stats.visitors}</div>
+        <div class="stat-desc">
+          {stats.visitorsGrowth ? `${stats.visitorsGrowth}%` : ""}
+        </div>
       </div>
 
       {/* page views */}
@@ -45,8 +53,10 @@ const Stats: FC = () => {
           </svg>
         </div>
         <div class="stat-title">Page Views</div>
-        <div class="stat-value text-secondary">TBD</div>
-        <div class="stat-desc">TBD% up</div>
+        <div class="stat-value text-secondary">{stats.views}</div>
+        <div class="stat-desc">
+          {stats.viewsGrowth ? `${stats.viewsGrowth}%` : ""}
+        </div>
       </div>
 
       {/* TODO bounce rate? */}

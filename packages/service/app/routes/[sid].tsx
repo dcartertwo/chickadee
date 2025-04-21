@@ -4,7 +4,8 @@ import Timeline from "../islands/timeline";
 import Menu from "../components/menu";
 import Stats from "../components/stats";
 
-export default createRoute((c) => {
+export default createRoute(async (c) => {
+  const sid = c.req.param("sid");
   // TODO! check if sid exists, otherwise go to index
 
   return c.render(
@@ -12,9 +13,9 @@ export default createRoute((c) => {
       <Header />
 
       <main class="flex-grow flex flex-col p-4 lg:p-8">
-        <Menu />
-        <Stats />
-        <Timeline />
+        <Menu sid={sid} />
+        <Stats sid={sid} />
+        <Timeline sid={sid} />
       </main>
 
       <Footer />

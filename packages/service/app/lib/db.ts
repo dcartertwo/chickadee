@@ -1,0 +1,168 @@
+import type { Context, Env } from "hono";
+import { z } from "zod";
+import { Column } from "../lib/datapoint";
+import { escapeSql } from "../lib/sql";
+
+// * Query
+
+function createQueryResultSchema<T extends z.ZodTypeAny>(dataSchema: T) {
+  return z.object({
+    meta: z
+      .object({
+        name: z.string(),
+        type: z.string(),
+      })
+      .array(),
+    data: z.array(dataSchema),
+    rows: z.number(),
+    rows_before_limit_at_least: z.number().optional(),
+  });
+}
+
+export async function query<T extends z.ZodTypeAny>(
+  env: Pick<Env["Bindings"], "ACCOUNT_ID" | "API_TOKEN">,
+  query: string,
+  dataSchema: T
+) {
+  console.debug("query()", query);
+
+  const ep = `https://api.cloudflare.com/client/v4/accounts/${env.ACCOUNT_ID}/analytics_engine/sql`;
+  const res = await fetch(ep, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${env.API_TOKEN}`,
+    },
+    body: query,
+  });
+
+  // handle error
+  if (!res.ok) {
+    throw new Error(await res.text());
+  }
+
+  // return data
+  const result = await res.json();
+  console.debug("query ->", result);
+  const parsed = createQueryResultSchema(dataSchema).parse(result);
+  return parsed;
+}
+
+// * Helpers
+
+type Timeframe = "today" | "yesterday" | "7d" | "30d" | "90d";
+type Granularity = "month" | "week" | "day" | "hour";
+
+function getTimeframeInterval(timeframe: Timeframe): string {
+  switch (timeframe) {
+    case "today":
+      return "'1' DAY";
+    case "yesterday":
+      return "'2' DAY";
+    case "7d":
+      return "'7' DAY";
+    case "30d":
+      return "'30' DAY";
+    case "90d":
+      return "'90' DAY";
+    default:
+      throw new Error(`Invalid timeframe: ${timeframe}`);
+  }
+}
+
+function getGranularityInterval(granularity: Granularity): string {
+  switch (granularity) {
+    case "month":
+      return "'1' MONTH";
+    case "week":
+      return "'1' WEEK";
+    case "day":
+      return "'1' DAY";
+    case "hour":
+      return "'1' HOUR";
+    default:
+      throw new Error(`Invalid granularity: ${granularity}`);
+  }
+}
+
+// * Stats
+
+const ZStats = z.object({
+  visitors: z.coerce.number(),
+  visitorsGrowth: z.coerce.number().optional(),
+  views: z.coerce.number(),
+  viewsGrowth: z.coerce.number().optional(),
+});
+export type IStats = z.infer<typeof ZStats>;
+
+export async function getStats(
+  c: Context<Env>,
+  sid: string,
+  timeframe: Timeframe = "7d"
+) {
+  const interval = getTimeframeInterval(timeframe);
+
+  // TODO! return percentage growth
+  const { data } = await query(
+    c.env,
+    `
+    SELECT
+      sum(_sample_interval) as views,
+      count(DISTINCT ${Column.dailyVisitorHash}) as visitors
+    FROM chickadee
+    WHERE
+      ${Column.sid} = ${escapeSql(sid)} AND
+      ${Column.evt} = 'view' AND
+      timestamp > now() - INTERVAL ${interval}
+    GROUP BY ${Column.sid}
+    `,
+    ZStats
+  );
+  return data[0];
+}
+
+// * Timeline
+
+const ZTimeline = z
+  .object({
+    timestamp: z.coerce.date(),
+    views: z.coerce.number(),
+    visitors: z.coerce.number(),
+  })
+  .array();
+export type ITimeline = z.infer<typeof ZTimeline>;
+
+export async function getTimeline(
+  c: Context<Env>,
+  sid: string,
+  timeframe: Timeframe = "7d",
+  granularity: Granularity = "day"
+) {
+  const interval = getTimeframeInterval(timeframe);
+  const group = getGranularityInterval(granularity);
+
+  const { data } = await query(
+    c.env,
+    `
+    SELECT
+      toStartOfInterval(timestamp, INTERVAL ${group}) as timestamp,
+      sum(_sample_interval) as views,
+      count(DISTINCT ${Column.dailyVisitorHash}) as visitors
+    FROM chickadee
+    WHERE
+      ${Column.sid} = ${escapeSql(sid)} AND
+      ${Column.evt} = 'view' AND
+      timestamp > now() - INTERVAL ${interval}
+    GROUP BY timestamp
+    ORDER BY timestamp ASC
+    `,
+    ZTimeline
+  );
+  return data;
+}
+
+// * TODOs
+
+// TODO! dimensions: ref, UTM, path, country, region, city, timezone, browser, os, device, locale
+// TODO metrics: width, loadTime
+
+// TODO! filter by dimensions
