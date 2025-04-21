@@ -49,11 +49,16 @@ export async function query<T extends z.ZodTypeAny>(
 
 // * Helpers
 
-type Timeframe = "today" | "yesterday" | "7d" | "30d" | "90d";
-type Granularity = "month" | "week" | "day" | "hour";
+export const ZTimeframe = z
+  .enum(["today", "yesterday", "7d", "30d", "90d"])
+  .default("7d");
+export type ITimeframe = z.infer<typeof ZTimeframe>;
 
-function getTimeframeInterval(timeframe: Timeframe): string {
-  switch (timeframe) {
+export const ZGranularity = z.enum(["month", "week", "day", "hour"]);
+export type IGranularity = z.infer<typeof ZGranularity>;
+
+function getTimeframeInterval(tf: ITimeframe): string {
+  switch (tf) {
     case "today":
       return "'1' DAY";
     case "yesterday":
@@ -65,12 +70,12 @@ function getTimeframeInterval(timeframe: Timeframe): string {
     case "90d":
       return "'90' DAY";
     default:
-      throw new Error(`Invalid timeframe: ${timeframe}`);
+      throw new Error(`Invalid timeframe: ${tf}`);
   }
 }
 
-function getGranularityInterval(granularity: Granularity): string {
-  switch (granularity) {
+function getGranularityInterval(g: IGranularity): string {
+  switch (g) {
     case "month":
       return "'1' MONTH";
     case "week":
@@ -80,7 +85,7 @@ function getGranularityInterval(granularity: Granularity): string {
     case "hour":
       return "'1' HOUR";
     default:
-      throw new Error(`Invalid granularity: ${granularity}`);
+      throw new Error(`Invalid granularity: ${g}`);
   }
 }
 
@@ -97,9 +102,9 @@ export type IStats = z.infer<typeof ZStats>;
 export async function getStats(
   c: Context<Env>,
   sid: string,
-  timeframe: Timeframe = "7d"
+  tf: ITimeframe = "7d"
 ) {
-  const interval = getTimeframeInterval(timeframe);
+  const interval = getTimeframeInterval(tf);
 
   // TODO! return percentage growth
   const { data } = await query(
@@ -134,11 +139,11 @@ export type ITimeline = z.infer<typeof ZTimeline>;
 export async function getTimeline(
   c: Context<Env>,
   sid: string,
-  timeframe: Timeframe = "7d",
-  granularity: Granularity = "day"
+  tf: ITimeframe = "7d",
+  g: IGranularity = "day"
 ) {
-  const interval = getTimeframeInterval(timeframe);
-  const group = getGranularityInterval(granularity);
+  const interval = getTimeframeInterval(tf);
+  const group = getGranularityInterval(g);
 
   const { data } = await query(
     c.env,

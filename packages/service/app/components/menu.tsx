@@ -1,17 +1,18 @@
 import type { FC } from "hono/jsx";
+import type { ITimeframe } from "../lib/db";
 
-const Menu: FC<{ sid: string }> = ({ sid }) => {
+const Menu: FC<{ sid: string; tf: ITimeframe }> = ({ sid, tf }) => {
   return (
     <div class="flex flex-col xs:flex-row gap-4 justify-between items-center">
       <SelectSite sid={sid} />
-      <SelectTimeframe />
+      <SelectTimeframe tf={tf} />
     </div>
   );
 };
 export default Menu;
 
 const SelectSite: FC<{ sid: string }> = ({ sid }) => {
-  const items = ["chickadee.me", "test.com"]; // TODO! get em
+  const items = ["chickadee.me", "begehr.me", "404.com"]; // TODO! get em
 
   return (
     <details class="dropdown">
@@ -31,8 +32,8 @@ const SelectSite: FC<{ sid: string }> = ({ sid }) => {
   );
 };
 
-const SelectTimeframe: FC = () => {
-  // TODO!
+const SelectTimeframe: FC<{ tf: ITimeframe }> = ({ tf }) => {
+  // TODO take from ZTimeframe
   const items = [
     { label: "Today", value: "today" },
     { label: "Yesterday", value: "yesterday" },
@@ -40,12 +41,11 @@ const SelectTimeframe: FC = () => {
     { label: "30 Days", value: "30d" },
     { label: "90 Days", value: "90d" },
   ];
-  const selected = items[0];
 
   return (
     <select class="select">
       {items.map(({ label, value }) => (
-        <option key={value} value={value}>
+        <option key={value} value={value} selected={tf === value}>
           {label}
         </option>
       ))}
