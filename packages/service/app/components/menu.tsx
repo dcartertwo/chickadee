@@ -1,5 +1,5 @@
 import type { FC } from "hono/jsx";
-import { TIMEFRAMES, ZTimeframe, type ITimeframe } from "../lib/db";
+import { TIMEFRAMES, type ITimeframe } from "../lib/db";
 
 const Menu: FC<{ sid: string; tf: ITimeframe }> = ({ sid, tf }) => {
   return (
