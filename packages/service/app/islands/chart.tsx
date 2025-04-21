@@ -1,25 +1,23 @@
 import { useEffect, useRef, useState, type FC } from "hono/jsx";
-import type { ApexOptions } from "apexcharts";
+import { Chart as ChartJS, type ChartData, type ChartOptions } from "chart.js";
 
-export type ChartOptions = Omit<ApexOptions, "series">;
-export type ChartData = ApexOptions["series"];
+export type Data = ChartData<"line">;
+export type Options = ChartOptions<"line">;
 
 const Chart: FC<{
-  class: string;
-  options: ChartOptions;
-  data: ChartData;
-}> = ({ class: cn, options, data }) => {
-  const ref = useRef<HTMLDivElement>(null);
-  const [chart, setChart] = useState<ApexCharts | null>(null);
+  class?: string;
+  data: Data;
+  options: Options;
+}> = ({ class: cn = "", data, options }) => {
+  const ref = useRef<HTMLCanvasElement>(null);
+  const [chart, setChart] = useState<ChartJS<"line">>();
 
   // init
   useEffect(() => {
     async function init() {
-      const ApexCharts = (await import("apexcharts")).default;
       if (ref.current) {
-        const chart = new ApexCharts(ref.current, { ...options, series: data });
+        const chart = new ChartJS(ref.current, { type: "line", data, options });
         setChart(chart);
-        await chart.render();
       }
     }
     init().catch(console.error);
@@ -27,15 +25,15 @@ const Chart: FC<{
 
   // update
   useEffect(() => {
-    chart?.updateOptions(options);
+    if (chart) chart.options = options;
   }, [options]);
   useEffect(() => {
-    if (data) chart?.updateSeries(data);
+    if (chart) chart.data = data;
   }, [data]);
 
   return (
     <div class={cn}>
-      <div ref={ref} class="size-full" />
+      <canvas ref={ref} class="size-full" />
     </div>
   );
 };

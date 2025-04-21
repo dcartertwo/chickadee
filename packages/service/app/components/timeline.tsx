@@ -1,5 +1,5 @@
 import type { FC } from "hono/jsx";
-import Chart, { type ChartData, type ChartOptions } from "../islands/chart";
+import Chart, { type Data, type Options } from "../islands/chart";
 import { getTimeline, type ITimeframe } from "../lib/db";
 import { useRequestContext } from "hono/jsx-renderer";
 import type { Env } from "hono";
@@ -10,51 +10,36 @@ const Timeline: FC<{ sid: string; tf: ITimeframe }> = async ({ sid, tf }) => {
   const c = useRequestContext<Env>();
   const timeline = await getTimeline(c, sid, tf);
 
-  const options: ChartOptions = {
-    chart: {
-      height: "100%",
-      width: "100%",
-      type: "area",
-      fontFamily: "Inter, sans-serif",
-      dropShadow: {
-        enabled: false,
+  const options: Options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "top" as const,
       },
-      toolbar: {
-        show: false,
+      title: {
+        display: true,
+        text: "Chart.js Line Chart",
       },
-    },
-    fill: {
-      type: "gradient",
-      gradient: {
-        opacityFrom: 0.55,
-        opacityTo: 0,
-        shade: "#1C64F2",
-        gradientToColors: ["#1C64F2"],
-      },
-    },
-    dataLabels: {
-      enabled: false,
-    },
-    grid: {
-      show: false,
-    },
-    yaxis: {
-      min: 0,
     },
   };
 
-  const data: ChartData = [
-    {
-      name: "views",
-      data: timeline.map((item) => item.views),
-      color: "#1A56DB",
-    },
-    {
-      name: "visitors",
-      data: timeline.map((item) => item.visitors),
-      color: "#10B981",
-    },
-  ];
+  const data: Data = {
+    labels: ["January", "February", "March", "April", "May", "June", "July"],
+    datasets: [
+      {
+        label: "Views",
+        data: timeline.map((item) => item.views),
+        borderColor: "#1A56DB",
+        backgroundColor: "#1A56DB80",
+      },
+      {
+        label: "Visitors",
+        data: timeline.map((item) => item.visitors),
+        borderColor: "#10B981",
+        backgroundColor: "#10B98180",
+      },
+    ],
+  };
 
   return <Chart class="h-96 w-full" options={options} data={data} />;
 };

@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@hono/zod-validator": "^0.4.3",
-    "apexcharts": "^4.6.0",
+    "chart.js": "^4.4.9",
     "hono": "^4.7.7",
     "honox": "^0.1.40",
     "intl-parse-accept-language": "^1.0.0",
