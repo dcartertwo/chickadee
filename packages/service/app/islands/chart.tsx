@@ -33,7 +33,11 @@ const Chart: FC<{
     chart?.updateSeries(data);
   }, [data]);
 
-  return <div ref={ref} class={twMerge(cn)} />;
+  return (
+    <div class={cn}>
+      <div ref={ref} class="size-full" />
+    </div>
+  );
 };
 
 export default Chart;

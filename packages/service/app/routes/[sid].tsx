@@ -1,6 +1,6 @@
 import { createRoute } from "honox/factory";
 import { Footer, Header } from "../components/common";
-import Timeline from "../islands/timeline";
+import Timeline from "../components/timeline";
 import Menu from "../components/menu";
 import Stats from "../components/stats";
 import { zValidator } from "@hono/zod-validator";
@@ -13,8 +13,6 @@ export default createRoute(
     const sid = c.req.param("sid");
     const { tf } = c.req.valid("query");
 
-    // TODO! check if sid exists, otherwise go to index
-
     const timeline = await getTimeline(c, sid, tf);
     // TODO! can't pass timeline to timeline?
 
@@ -25,7 +23,7 @@ export default createRoute(
         <main class="flex-grow flex flex-col p-4 lg:p-8">
           <Menu sid={sid} tf={tf} />
           <Stats sid={sid} tf={tf} />
-          <Timeline timeline={timeline} />
+          <Timeline sid={sid} tf={tf} />
         </main>
 
         <Footer />

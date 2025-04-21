@@ -1,9 +1,14 @@
 import type { FC } from "hono/jsx";
-import Chart, { type ChartData, type ChartOptions } from "../components/chart";
-import type { ITimeline } from "../lib/db";
+import Chart, { type ChartData, type ChartOptions } from "../islands/chart";
+import { getTimeline, type ITimeframe, type ITimeline } from "../lib/db";
+import { useRequestContext } from "hono/jsx-renderer";
+import type { Env } from "hono";
 
-const Timeline: FC<{ timeline: ITimeline }> = async ({ timeline }) => {
+const Timeline: FC<{ sid: string; tf: ITimeframe }> = async ({ sid, tf }) => {
   // TODO! show timestamps on xaxis
+
+  const c = useRequestContext<Env>();
+  const timeline = await getTimeline(c, sid, tf);
 
   const options: ChartOptions = {
     chart: {
