@@ -140,7 +140,7 @@ export async function getStats(
     `,
     ZStats
   );
-  return data[0];
+  return data.length > 0 ? data[0] : null;
 }
 
 // * Timeline

@@ -26,9 +26,9 @@ const Stats: FC<{ sid: string; tf: ITimeframe }> = async ({ sid, tf }) => {
           </svg>
         </div>
         <div class="stat-title">Unique Visitors</div>
-        <div class="stat-value text-primary">{stats.visitors}</div>
+        <div class="stat-value text-primary">{stats?.visitors}</div>
         <div class="stat-desc">
-          {stats.visitorsGrowth ? `${stats.visitorsGrowth}%` : ""}
+          {stats?.visitorsGrowth ? `${stats.visitorsGrowth}%` : ""}
         </div>
       </div>
 
@@ -53,9 +53,9 @@ const Stats: FC<{ sid: string; tf: ITimeframe }> = async ({ sid, tf }) => {
           </svg>
         </div>
         <div class="stat-title">Page Views</div>
-        <div class="stat-value text-secondary">{stats.views}</div>
+        <div class="stat-value text-secondary">{stats?.views}</div>
         <div class="stat-desc">
-          {stats.viewsGrowth ? `${stats.viewsGrowth}%` : ""}
+          {stats?.viewsGrowth ? `${stats.viewsGrowth}%` : ""}
         </div>
       </div>
 
