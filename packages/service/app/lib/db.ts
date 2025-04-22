@@ -73,7 +73,7 @@ function getTimeframeInterval(tf: ITimeframe): string {
   }
 }
 
-function getDefaultGranularityIntervalForTimeframe(
+export function getDefaultGranularityIntervalForTimeframe(
   tf: ITimeframe
 ): IGranularity {
   switch (tf) {
@@ -136,7 +136,6 @@ export async function getStats(
       ${Column.sid} = ${escapeSql(sid)} AND
       ${Column.evt} = 'view' AND
       timestamp > now() - INTERVAL ${interval}
-    GROUP BY ${Column.sid}
     `,
     ZStats
   );
