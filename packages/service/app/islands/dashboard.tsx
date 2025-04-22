@@ -1,4 +1,4 @@
-import { Fragment, type FC } from "hono/jsx";
+import type { FC } from "hono/jsx";
 import Stats from "../components/stats";
 import Timeline from "../components/timeline";
 import type { IGranularity, IStats, ITimeline, ITimeframe } from "../lib/db";
@@ -12,10 +12,10 @@ interface Props {
 
 const Dashboard: FC<Props> = ({ granularity, stats, timeline }) => {
   return (
-    <Fragment>
+    <div class="flex flex-col gap-4">
       <Stats stats={stats} />
       <Timeline timeline={timeline} granularity={granularity} />
-    </Fragment>
+    </div>
   );
 };
 
