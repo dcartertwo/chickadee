@@ -132,6 +132,7 @@ export async function getStats(c: Context<Env>, sid: string, tf: ITimeframe) {
       ${Column.sid} = ${escapeSql(sid)} AND
       ${Column.evt} = 'view' AND
       timestamp > now() - INTERVAL ${interval}
+    GROUP BY ${Column.sid}
     `,
     ZStats
   );
