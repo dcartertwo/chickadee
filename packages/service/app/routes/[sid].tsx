@@ -29,7 +29,7 @@ export default createRoute(
       <div class="h-dvh flex flex-col">
         <Header />
 
-        <main class="flex-grow flex flex-col p-4 lg:p-8">
+        <main class="flex-grow flex flex-col p-4 lg:p-8 bg-base-200">
           <Menu sid={sid} tf={tf} />
           <Dashboard
             tf={tf}

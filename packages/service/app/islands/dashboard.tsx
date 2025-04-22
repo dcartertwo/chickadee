@@ -11,7 +11,7 @@ interface Props {
   timeline: ITimeline;
 }
 
-const Dashboard: FC<Props> = ({ granularity, stats, timeline }) => {
+const Dashboard: FC<Props> = ({ tf, granularity, stats, timeline }) => {
   const [metric, setMetric] = useState<Metric>(Metric.Visitors);
 
   return (

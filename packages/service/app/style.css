@@ -1,7 +1,7 @@
 @import "tailwindcss" source("../app");
 
 @plugin "daisyui" {
-  themes: lofi --default, black --prefersdark;
+  themes: pastel --default, sunset --prefersdark;
 }
 @plugin "@tailwindcss/typography";
 @plugin "@iconify/tailwind4";
