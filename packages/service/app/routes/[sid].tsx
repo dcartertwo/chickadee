@@ -19,10 +19,8 @@ export default createRoute(
     const { tf } = c.req.valid("query");
 
     const granularity = getDefaultGranularityIntervalForTimeframe(tf);
-    const [stats, timeline] = await Promise.all([
-      getStats(c, sid, tf),
-      getTimeline(c, sid, tf, granularity),
-    ]);
+    const stats = await getStats(c, sid, tf);
+    const timeline = await getTimeline(c, sid, tf, granularity);
 
     return c.render(
       <div class="h-dvh flex flex-col">
