@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type FC } from "hono/jsx";
 import { Chart as ChartJS, type ChartData, type ChartOptions } from "chart.js";
+import { twMerge } from "tailwind-merge";
 
 export type Data = ChartData<"line">;
 export type Options = ChartOptions<"line">;
@@ -32,8 +33,8 @@ const Chart: FC<{
   }, [data]);
 
   return (
-    <div class={cn}>
-      <canvas ref={ref} class="size-full" />
+    <div class={twMerge("relative", cn)}>
+      <canvas ref={ref} />
     </div>
   );
 };

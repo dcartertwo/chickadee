@@ -15,6 +15,7 @@ const Timeline: FC<{ sid: string; tf: ITimeframe }> = async ({ sid, tf }) => {
 
   const options: Options = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {},
     scales: {
       x: {
