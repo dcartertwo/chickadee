@@ -7,7 +7,6 @@ import {
   LineController,
   LineElement,
   TimeScale,
-  Tooltip,
 } from "chart.js";
 import "chartjs-adapter-spacetime";
 
@@ -17,8 +16,7 @@ ChartJS.register(
   PointElement,
   LineController,
   LineElement,
-  TimeScale,
-  Tooltip
+  TimeScale
 );
 
 createClient();
