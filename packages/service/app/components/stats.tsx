@@ -1,6 +1,6 @@
 import type { FC } from "hono/jsx";
 import type { IStats } from "../lib/db";
-import type { Metric } from "../lib/models";
+import { Metric } from "../lib/models";
 
 const Stats: FC<{
   stats: IStats | null;
@@ -10,7 +10,11 @@ const Stats: FC<{
   return (
     <div class="stats shadow stats-vertical sm:stats-horizontal">
       {/* Visitors */}
-      <div class="stat">
+      <button
+        type="button"
+        class="stat"
+        onClick={() => setMetric(Metric.Visitors)}
+      >
         <div class="stat-figure">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -30,10 +34,17 @@ const Stats: FC<{
         <div class="stat-desc">
           {stats?.visitorsGrowth ? `${stats.visitorsGrowth}%` : ""}
         </div>
-      </div>
+        {metric === Metric.Visitors && (
+          <div class="w-full h-1 bg-accent mt-2 col-span-3" />
+        )}
+      </button>
 
       {/* Page Views */}
-      <div class="stat">
+      <button
+        type="button"
+        class="stat"
+        onClick={() => setMetric(Metric.Pageviews)}
+      >
         <div class="stat-figure">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -57,7 +68,10 @@ const Stats: FC<{
         <div class="stat-desc">
           {stats?.viewsGrowth ? `${stats.viewsGrowth}%` : ""}
         </div>
-      </div>
+        {metric === Metric.Pageviews && (
+          <div class="w-full h-1 bg-accent mt-2 col-span-3" />
+        )}
+      </button>
 
       {/* TODO bounce rate? */}
       {/* <div class="stat">
