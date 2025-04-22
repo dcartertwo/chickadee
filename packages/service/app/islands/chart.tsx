@@ -26,10 +26,16 @@ const Chart: FC<{
 
   // update
   useEffect(() => {
-    if (chart) chart.options = options;
+    if (chart) {
+      chart.options = options;
+      chart.update();
+    }
   }, [options]);
   useEffect(() => {
-    if (chart) chart.data = data;
+    if (chart) {
+      chart.data = data;
+      chart.update();
+    }
   }, [data]);
 
   return (
