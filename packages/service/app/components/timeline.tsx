@@ -5,7 +5,7 @@ import type { IGranularity, ITimeline } from "../lib/db";
 const Timeline: FC<{
   timeline: ITimeline;
   granularity: IGranularity;
-}> = async ({ timeline, granularity }) => {
+}> = ({ timeline, granularity }) => {
   const options: Options = {
     responsive: true,
     maintainAspectRatio: false,

@@ -1,7 +1,7 @@
 import type { FC } from "hono/jsx";
 import type { IStats } from "../lib/db";
 
-const Stats: FC<{ stats: IStats | null }> = async ({ stats }) => {
+const Stats: FC<{ stats: IStats | null }> = ({ stats }) => {
   return (
     <div class="stats shadow stats-vertical sm:stats-horizontal">
       {/* unique visitors */}
