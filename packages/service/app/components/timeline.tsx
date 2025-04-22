@@ -1,11 +1,13 @@
 import type { FC } from "hono/jsx";
 import Chart, { type Data, type Options } from "../islands/chart";
 import type { IGranularity, ITimeline } from "../lib/db";
+import type { Metric } from "../lib/models";
 
 const Timeline: FC<{
   timeline: ITimeline;
   granularity: IGranularity;
-}> = ({ timeline, granularity }) => {
+  metric: Metric;
+}> = ({ timeline, granularity, metric }) => {
   const options: Options = {
     responsive: true,
     maintainAspectRatio: false,

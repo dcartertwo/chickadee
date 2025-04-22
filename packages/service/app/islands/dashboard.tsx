@@ -1,7 +1,8 @@
-import type { FC } from "hono/jsx";
+import { useState, type FC } from "hono/jsx";
 import Stats from "../components/stats";
 import Timeline from "../components/timeline";
 import type { IGranularity, IStats, ITimeline, ITimeframe } from "../lib/db";
+import { Metric } from "../lib/models";
 
 interface Props {
   tf: ITimeframe;
@@ -11,10 +12,12 @@ interface Props {
 }
 
 const Dashboard: FC<Props> = ({ granularity, stats, timeline }) => {
+  const [metric, setMetric] = useState<Metric>(Metric.Visitors);
+
   return (
     <div class="flex flex-col gap-4">
-      <Stats stats={stats} />
-      <Timeline timeline={timeline} granularity={granularity} />
+      <Stats stats={stats} metric={metric} setMetric={setMetric} />
+      <Timeline timeline={timeline} granularity={granularity} metric={metric} />
     </div>
   );
 };

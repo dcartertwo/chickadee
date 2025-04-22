@@ -1,35 +1,40 @@
 import type { FC } from "hono/jsx";
 import type { IStats } from "../lib/db";
+import type { Metric } from "../lib/models";
 
-const Stats: FC<{ stats: IStats | null }> = ({ stats }) => {
+const Stats: FC<{
+  stats: IStats | null;
+  metric: Metric;
+  setMetric: (metric: Metric) => void;
+}> = ({ stats, metric, setMetric }) => {
   return (
     <div class="stats shadow stats-vertical sm:stats-horizontal">
-      {/* unique visitors */}
+      {/* Visitors */}
       <div class="stat">
-        <div class="stat-figure text-primary">
+        <div class="stat-figure">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="32"
             height="32"
             viewBox="0 0 32 32"
           >
-            <title>Unique Visitors</title>
+            <title>Visitors</title>
             <path
               fill="currentColor"
               d="M16 4a5 5 0 1 1-5 5a5 5 0 0 1 5-5m0-2a7 7 0 1 0 7 7a7 7 0 0 0-7-7m10 28h-2v-5a5 5 0 0 0-5-5h-6a5 5 0 0 0-5 5v5H6v-5a7 7 0 0 1 7-7h6a7 7 0 0 1 7 7z"
             />
           </svg>
         </div>
-        <div class="stat-title">Unique Visitors</div>
-        <div class="stat-value text-primary">{stats?.visitors}</div>
+        <div class="stat-title">Visitors</div>
+        <div class="stat-value">{stats?.visitors}</div>
         <div class="stat-desc">
           {stats?.visitorsGrowth ? `${stats.visitorsGrowth}%` : ""}
         </div>
       </div>
 
-      {/* page views */}
+      {/* Page Views */}
       <div class="stat">
-        <div class="stat-figure text-secondary">
+        <div class="stat-figure">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="32"
@@ -48,7 +53,7 @@ const Stats: FC<{ stats: IStats | null }> = ({ stats }) => {
           </svg>
         </div>
         <div class="stat-title">Page Views</div>
-        <div class="stat-value text-secondary">{stats?.views}</div>
+        <div class="stat-value">{stats?.views}</div>
         <div class="stat-desc">
           {stats?.viewsGrowth ? `${stats.viewsGrowth}%` : ""}
         </div>

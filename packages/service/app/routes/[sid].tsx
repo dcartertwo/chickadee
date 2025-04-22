@@ -1,8 +1,6 @@
 import { createRoute } from "honox/factory";
 import { Footer, Header } from "../components/common";
-import Timeline from "../components/timeline";
 import Menu from "../components/menu";
-import Stats from "../components/stats";
 import { zValidator } from "@hono/zod-validator";
 import {
   getDefaultGranularityIntervalForTimeframe,
@@ -12,6 +10,7 @@ import {
 } from "../lib/db";
 import { z } from "zod";
 import Dashboard from "../islands/dashboard";
+import { getStatsMock, getTimelineMock } from "../lib/mock";
 
 export default createRoute(
   zValidator("query", z.object({ tf: ZTimeframe })),
@@ -21,8 +20,10 @@ export default createRoute(
 
     // get data
     const granularity = getDefaultGranularityIntervalForTimeframe(tf);
-    const stats = await getStats(c, sid, tf);
-    const timeline = await getTimeline(c, sid, tf, granularity);
+    // const stats = await getStats(c, sid, tf);
+    // const timeline = await getTimeline(c, sid, tf, granularity);
+    const stats = getStatsMock();
+    const timeline = getTimelineMock();
 
     return c.render(
       <div class="h-dvh flex flex-col">
