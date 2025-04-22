@@ -11,6 +11,7 @@ import {
   ZTimeframe,
 } from "../lib/db";
 import { z } from "zod";
+import Dashboard from "../islands/dashboard";
 
 export default createRoute(
   zValidator("query", z.object({ tf: ZTimeframe })),
@@ -18,6 +19,7 @@ export default createRoute(
     const sid = c.req.param("sid");
     const { tf } = c.req.valid("query");
 
+    // get data
     const granularity = getDefaultGranularityIntervalForTimeframe(tf);
     const stats = await getStats(c, sid, tf);
     const timeline = await getTimeline(c, sid, tf, granularity);
@@ -28,8 +30,12 @@ export default createRoute(
 
         <main class="flex-grow flex flex-col p-4 lg:p-8">
           <Menu sid={sid} tf={tf} />
-          <Stats stats={stats} />
-          <Timeline timeline={timeline} granularity={granularity} />
+          <Dashboard
+            tf={tf}
+            granularity={granularity}
+            stats={stats}
+            timeline={timeline}
+          />
         </main>
 
         <Footer />
