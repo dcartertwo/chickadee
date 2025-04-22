@@ -117,11 +117,7 @@ const ZStats = z.object({
 });
 export type IStats = z.infer<typeof ZStats>;
 
-export async function getStats(
-  c: Context<Env>,
-  sid: string,
-  tf: ITimeframe = "7d"
-) {
+export async function getStats(c: Context<Env>, sid: string, tf: ITimeframe) {
   const interval = getTimeframeInterval(tf);
 
   // TODO! return percentage growth
@@ -157,13 +153,11 @@ export type ITimeline = z.infer<typeof ZTimeline>;
 export async function getTimeline(
   c: Context<Env>,
   sid: string,
-  tf: ITimeframe = "7d",
-  g?: IGranularity
+  tf: ITimeframe,
+  g: IGranularity
 ) {
   const interval = getTimeframeInterval(tf);
-  const group = getGranularityInterval(
-    g ?? getDefaultGranularityIntervalForTimeframe(tf)
-  );
+  const group = getGranularityInterval(g);
 
   const { data } = await query(
     c.env,

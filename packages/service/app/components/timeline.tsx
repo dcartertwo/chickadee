@@ -1,18 +1,11 @@
 import type { FC } from "hono/jsx";
 import Chart, { type Data, type Options } from "../islands/chart";
-import {
-  getDefaultGranularityIntervalForTimeframe,
-  getTimeline,
-  type ITimeframe,
-} from "../lib/db";
-import { useRequestContext } from "hono/jsx-renderer";
-import type { Env } from "hono";
+import type { IGranularity, ITimeline } from "../lib/db";
 
-const Timeline: FC<{ sid: string; tf: ITimeframe }> = async ({ sid, tf }) => {
-  const c = useRequestContext<Env>();
-  const timeline = await getTimeline(c, sid, tf);
-  const granularity = getDefaultGranularityIntervalForTimeframe(tf);
-
+const Timeline: FC<{
+  timeline: ITimeline;
+  granularity: IGranularity;
+}> = async ({ timeline, granularity }) => {
   const options: Options = {
     responsive: true,
     maintainAspectRatio: false,

@@ -4,7 +4,12 @@ import Timeline from "../components/timeline";
 import Menu from "../components/menu";
 import Stats from "../components/stats";
 import { zValidator } from "@hono/zod-validator";
-import { getTimeline, ZTimeframe } from "../lib/db";
+import {
+  getDefaultGranularityIntervalForTimeframe,
+  getStats,
+  getTimeline,
+  ZTimeframe,
+} from "../lib/db";
 import { z } from "zod";
 
 export default createRoute(
@@ -13,8 +18,11 @@ export default createRoute(
     const sid = c.req.param("sid");
     const { tf } = c.req.valid("query");
 
-    const timeline = await getTimeline(c, sid, tf);
-    // TODO! can't pass timeline to timeline?
+    const granularity = getDefaultGranularityIntervalForTimeframe(tf);
+    const [stats, timeline] = await Promise.all([
+      getStats(c, sid, tf),
+      getTimeline(c, sid, tf, granularity),
+    ]);
 
     return c.render(
       <div class="h-dvh flex flex-col">
@@ -22,8 +30,8 @@ export default createRoute(
 
         <main class="flex-grow flex flex-col p-4 lg:p-8">
           <Menu sid={sid} tf={tf} />
-          <Stats sid={sid} tf={tf} />
-          <Timeline sid={sid} tf={tf} />
+          <Stats stats={stats} />
+          <Timeline timeline={timeline} granularity={granularity} />
         </main>
 
         <Footer />

@@ -1,12 +1,7 @@
 import type { FC } from "hono/jsx";
-import { getStats, type ITimeframe } from "../lib/db";
-import { useRequestContext } from "hono/jsx-renderer";
-import type { Env } from "hono";
+import type { IStats } from "../lib/db";
 
-const Stats: FC<{ sid: string; tf: ITimeframe }> = async ({ sid, tf }) => {
-  const c = useRequestContext<Env>();
-  const stats = await getStats(c, sid, tf);
-
+const Stats: FC<{ stats: IStats | null }> = async ({ stats }) => {
   return (
     <div class="stats shadow stats-vertical sm:stats-horizontal">
       {/* unique visitors */}
