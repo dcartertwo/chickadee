@@ -2,7 +2,6 @@ import { Fragment, type FC } from "hono/jsx";
 import Stats from "../components/stats";
 import Timeline from "../components/timeline";
 import type { IGranularity, IStats, ITimeline, ITimeframe } from "../lib/db";
-import Chart from "./chart";
 
 interface Props {
   tf: ITimeframe;
