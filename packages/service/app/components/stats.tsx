@@ -1,6 +1,7 @@
 import type { FC } from "hono/jsx";
 import type { IStats } from "../lib/db";
 import { Metric } from "../lib/models";
+import { twMerge } from "tailwind-merge";
 
 const Stats: FC<{
   stats: IStats | null;
@@ -8,11 +9,11 @@ const Stats: FC<{
   setMetric: (metric: Metric) => void;
 }> = ({ stats, metric, setMetric }) => {
   return (
-    <div class="stats shadow stats-vertical sm:stats-horizontal">
+    <div class="stats shadow stats-vertical sm:stats-horizontal w-min">
       {/* Visitors */}
       <button
         type="button"
-        class="stat"
+        class="stat text-start min-w-42"
         onClick={() => setMetric(Metric.Visitors)}
       >
         <div class="stat-figure">
@@ -34,15 +35,18 @@ const Stats: FC<{
         <div class="stat-desc">
           {stats?.visitorsGrowth ? `${stats.visitorsGrowth}%` : ""}
         </div>
-        {metric === Metric.Visitors && (
-          <div class="w-full h-1 bg-accent mt-2 col-span-3" />
-        )}
+        <div
+          class={twMerge(
+            "w-full h-1 bg-accent mt-2 col-span-3",
+            metric === Metric.Visitors ? "visible" : "invisible",
+          )}
+        />
       </button>
 
       {/* Page Views */}
       <button
         type="button"
-        class="stat"
+        class="stat text-start min-w-42"
         onClick={() => setMetric(Metric.Pageviews)}
       >
         <div class="stat-figure">
@@ -68,9 +72,12 @@ const Stats: FC<{
         <div class="stat-desc">
           {stats?.viewsGrowth ? `${stats.viewsGrowth}%` : ""}
         </div>
-        {metric === Metric.Pageviews && (
-          <div class="w-full h-1 bg-accent mt-2 col-span-3" />
-        )}
+        <div
+          class={twMerge(
+            "w-full h-1 bg-accent mt-2 col-span-3",
+            metric === Metric.Pageviews ? "visible" : "invisible",
+          )}
+        />
       </button>
 
       {/* TODO bounce rate? */}
