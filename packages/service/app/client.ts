@@ -42,20 +42,14 @@ function updateChartTheme(isDarkMode: boolean) {
     chart.options.backgroundColor = theme.backgroundColor;
     chart.options.borderColor = theme.borderColor;
     chart.options.color = theme.color;
-    if (chart.options.scales) {
-      if (chart.options.scales.x) {
-        if (chart.options.scales.x.grid)
-          chart.options.scales.x.grid.color = theme.borderColor;
-        if (chart.options.scales.x.ticks)
-          chart.options.scales.x.ticks.color = theme.color;
-      }
-      if (chart.options.scales.y) {
-        if (chart.options.scales.y.grid)
-          chart.options.scales.y.grid.color = theme.borderColor;
-        if (chart.options.scales.y.ticks)
-          chart.options.scales.y.ticks.color = theme.color;
-      }
-    }
+    if (chart.options.scales?.x?.grid)
+      chart.options.scales.x.grid.color = theme.borderColor;
+    if (chart.options.scales?.x?.ticks)
+      chart.options.scales.x.ticks.color = theme.color;
+    if (chart.options.scales?.y?.grid)
+      chart.options.scales.y.grid.color = theme.borderColor;
+    if (chart.options.scales?.y?.ticks)
+      chart.options.scales.y.ticks.color = theme.color;
 
     chart.update();
   }
