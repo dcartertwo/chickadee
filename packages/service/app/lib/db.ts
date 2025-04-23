@@ -4,7 +4,9 @@ import { Column } from "../lib/datapoint";
 import { escapeSql } from "../lib/sql";
 import spacetime, { type Spacetime } from "spacetime";
 import {
-  ZDimension,
+  type IDimension,
+  type IDimensionBars,
+  ZBar,
   ZStats,
   ZTimelineItem,
   type IGranularity,
@@ -206,20 +208,56 @@ export async function getDimensions(
   c: Context<Env>,
   sid: string,
   tf: ITimeframe
-) {
-  const { data } = await query(
-    c.env,
-    `SELECT
-      DISTINCT ${Column.path}
-    FROM chickadee
-    WHERE
-      ${Column.sid} = ${escapeSql(sid)} AND
-      ${Column.evt} = 'view' AND
-      ${getTimeframeFilter(tf)}
-    `,
-    ZDimension
+): Promise<IDimensionBars[]> {
+  // Since we can't use UNION, we'll need to make separate queries for each dimension
+  const dimensions: { name: IDimension; column: string }[] = [
+    { name: "ref", column: Column.ref },
+    { name: "path", column: Column.path },
+    { name: "hash", column: Column.hash },
+    // Location
+    { name: "country", column: Column.country },
+    { name: "region", column: Column.region },
+    { name: "city", column: Column.city },
+    { name: "timezone", column: Column.timezone },
+    // headers
+    { name: "browser", column: Column.browser },
+    { name: "browser_version", column: Column.browserVersion },
+    { name: "os", column: Column.os },
+    { name: "os_version", column: Column.osVersion },
+    { name: "device", column: Column.device },
+    { name: "locale", column: Column.locale },
+    // UTM
+    { name: "utm_source", column: Column.utmSource },
+    { name: "utm_medium", column: Column.utmMedium },
+    { name: "utm_campaign", column: Column.utmCampaign },
+  ];
+
+  // Execute queries for each dimension
+  const results = await Promise.all(
+    dimensions.map((dim) =>
+      query(
+        c.env,
+        `SELECT
+          ${dim.column} as value,
+          sum(_sample_interval) as count
+        FROM chickadee
+        WHERE
+          ${Column.sid} = ${escapeSql(sid)} AND
+          ${Column.evt} = 'view' AND
+          ${getTimeframeFilter(tf)} AND
+          ${dim.column} IS NOT NULL
+        GROUP BY value
+        ORDER BY count DESC`,
+        ZBar
+      )
+    )
   );
-  return data;
+
+  // Combine all results
+  return results.map((result, i) => ({
+    dimension: dimensions[i].name,
+    bars: result.data,
+  })) satisfies IDimensionBars[];
 }
 
 // * TODOs

@@ -3,12 +3,13 @@ import Menu from "../components/menu";
 import { zValidator } from "@hono/zod-validator";
 import {
   getDefaultGranularityIntervalForTimeframe,
+  getDimensions,
   getStats,
   getTimeline,
 } from "../lib/db";
 import { z } from "zod";
 import Dashboard from "../islands/dashboard";
-import { getStatsMock, getTimelineMock } from "../lib/mock";
+import { getDimensionsMock, getStatsMock, getTimelineMock } from "../lib/mock";
 import { getSites } from "../lib/kv";
 import { Fragment } from "hono/jsx/jsx-runtime";
 import { ZSid, ZTimeframe } from "../lib/models";
@@ -27,11 +28,13 @@ export default createRoute(
     const granularity = getDefaultGranularityIntervalForTimeframe(tf);
 
     // get data
-    const stats = await getStats(c, sid, tf);
-    const timeline = await getTimeline(c, sid, tf, granularity);
+    // const stats = await getStats(c, sid, tf);
+    // const timeline = await getTimeline(c, sid, tf, granularity);
+    // const dimensions = await getDimensions(c, sid, tf);
     // DEBUG
-    // const stats = getStatsMock();
-    // const timeline = getTimelineMock();
+    const stats = getStatsMock();
+    const timeline = getTimelineMock();
+    const dimensions = getDimensionsMock();
 
     return c.render(
       <Fragment>
@@ -41,6 +44,7 @@ export default createRoute(
           granularity={granularity}
           stats={stats}
           timeline={timeline}
+          dimensions={dimensions}
         />
       </Fragment>,
     );

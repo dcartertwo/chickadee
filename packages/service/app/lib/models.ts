@@ -39,7 +39,35 @@ const ZTimeline = ZTimelineItem.array();
 export type ITimeline = z.infer<typeof ZTimeline>;
 
 // dimensions
-export const ZDimension = z.object({
-  path: z.string(),
+const DIMENSIONS = [
+  "ref",
+  "path",
+  "hash",
+  // Location
+  "country",
+  "region",
+  "city",
+  "timezone",
+  // headers
+  "browser",
+  "browser_version",
+  "os",
+  "os_version",
+  "device",
+  "locale",
+  // UTM
+  "utm_source",
+  "utm_medium",
+  "utm_campaign",
+] as const;
+export type IDimension = (typeof DIMENSIONS)[number];
+export const ZBar = z.object({
+  value: z.string(),
+  count: z.number(),
 });
-export type IDimension = z.infer<typeof ZDimension>;
+export type IBar = z.infer<typeof ZBar>;
+export const ZDimensionBars = z.object({
+  dimension: z.enum(DIMENSIONS),
+  bars: ZBar.array(),
+});
+export type IDimensionBars = z.infer<typeof ZDimensionBars>;
