@@ -4,6 +4,7 @@ import { Column } from "../lib/datapoint";
 import { escapeSql } from "../lib/sql";
 import spacetime, { type Spacetime } from "spacetime";
 import {
+  ZDimension,
   ZStats,
   ZTimelineItem,
   type IGranularity,
@@ -197,6 +198,28 @@ export async function getTimeline(
   console.debug("filled", filled);
 
   return filled;
+}
+
+// * Dimensions
+
+export async function getDimensions(
+  c: Context<Env>,
+  sid: string,
+  tf: ITimeframe
+) {
+  const { data } = await query(
+    c.env,
+    `SELECT
+      DISTINCT ${Column.path}
+    FROM chickadee
+    WHERE
+      ${Column.sid} = ${escapeSql(sid)} AND
+      ${Column.evt} = 'view' AND
+      ${getTimeframeFilter(tf)}
+    `,
+    ZDimension
+  );
+  return data;
 }
 
 // * TODOs

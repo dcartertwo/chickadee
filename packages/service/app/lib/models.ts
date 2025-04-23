@@ -37,3 +37,9 @@ export const ZTimelineItem = z.object({
 });
 const ZTimeline = ZTimelineItem.array();
 export type ITimeline = z.infer<typeof ZTimeline>;
+
+// dimensions
+export const ZDimension = z.object({
+  path: z.string(),
+});
+export type IDimension = z.infer<typeof ZDimension>;
