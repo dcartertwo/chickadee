@@ -8,6 +8,6 @@ export default createRoute(async (c) => {
   if (sites.length === 0) return c.redirect("/setup");
 
   // redirect to last site by default
-  const sid = sites[sites.length - 1];
+  const sid = Array.from(sites)[0];
   return c.redirect(`/${sid}`);
 });

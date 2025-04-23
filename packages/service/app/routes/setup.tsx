@@ -1,6 +1,7 @@
 import { Fragment } from "hono/jsx/jsx-runtime";
 import { createRoute } from "honox/factory";
 import { ZSid } from "../lib/models";
+import { addSite } from "../lib/kv";
 
 export const POST = createRoute(async (c) => {
   const body = await c.req.parseBody();
@@ -23,7 +24,7 @@ export const POST = createRoute(async (c) => {
   }
 
   const sid = parsed.data;
-  console.debug("DEBUG new sid", sid); // TODO! add sid to kv
+  await addSite(c, sid);
   const script = `
 <script
   src="https://[WORKER_DOMAIN].workers.dev/script.js"
