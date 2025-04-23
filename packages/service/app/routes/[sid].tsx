@@ -28,13 +28,13 @@ export default createRoute(
     const granularity = getDefaultGranularityIntervalForTimeframe(tf);
 
     // get data
-    // const stats = await getStats(c, sid, tf);
-    // const timeline = await getTimeline(c, sid, tf, granularity);
-    // const dimensions = await getDimensions(c, sid, tf);
+    const stats = await getStats(c, sid, tf);
+    const timeline = await getTimeline(c, sid, tf, granularity);
+    const dimensions = await getDimensions(c, sid, tf);
     // DEBUG
-    const stats = getStatsMock();
-    const timeline = getTimelineMock();
-    const dimensions = getDimensionsMock();
+    // const stats = getStatsMock();
+    // const timeline = getTimelineMock();
+    // const dimensions = getDimensionsMock();
 
     return c.render(
       <Fragment>
