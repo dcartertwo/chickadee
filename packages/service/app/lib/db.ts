@@ -239,13 +239,12 @@ export async function getDimensions(
         c.env,
         `SELECT
           ${dim.column} as value,
-          sum(_sample_interval) as count
+          count(DISTINCT ${Column.dailyVisitorHash}) as count
         FROM chickadee
         WHERE
           ${Column.sid} = ${escapeSql(sid)} AND
           ${Column.evt} = 'view' AND
-          ${getTimeframeFilter(tf)} AND
-          ${dim.column} IS NOT NULL
+          ${getTimeframeFilter(tf)}
         GROUP BY value
         ORDER BY count DESC`,
         ZBar

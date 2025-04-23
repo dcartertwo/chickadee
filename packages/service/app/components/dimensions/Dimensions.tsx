@@ -1,21 +1,21 @@
-import { type FC } from "hono/jsx";
+import type { FC } from "hono/jsx";
+import type { IDimensionBars } from "../../lib/models";
 import {
-  IDimensionBars,
-} from "../../lib/models";
-import DimensionCardSource from "./DimensionCardSource";
-import DimensionCardPage from "./DimensionCardPage";
-import DimensionCardLocation from "./DimensionCardLocation";
-import DimensionCardDevice from "./DimensionCardDevice";
+  DimensionsCardDevice,
+  DimensionsCardLocation,
+  DimensionsCardPage,
+  DimensionsCardSource,
+} from "./DimensionsCards";
 
 const Dimensions: FC<{
   dimensions: IDimensionBars[];
 }> = ({ dimensions }) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <DimensionCardSource dimensions={dimensions} />
-      <DimensionCardPage dimensions={dimensions} />
-      <DimensionCardLocation dimensions={dimensions} />
-      <DimensionCardDevice dimensions={dimensions} />
+      <DimensionsCardSource dimensions={dimensions} />
+      <DimensionsCardPage dimensions={dimensions} />
+      <DimensionsCardLocation dimensions={dimensions} />
+      <DimensionsCardDevice dimensions={dimensions} />
     </div>
   );
 };
