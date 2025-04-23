@@ -9,11 +9,11 @@ const Stats: FC<{
   setMetric: (metric: Metric) => void;
 }> = ({ stats, metric, setMetric }) => {
   return (
-    <div class="stats shadow stats-vertical sm:stats-horizontal w-min">
+    <div class="stats shadow stats-horizontal w-fit">
       {/* Visitors */}
       <button
         type="button"
-        class="stat text-start min-w-42"
+        class="stat text-start min-w-32"
         onClick={() => setMetric(Metric.Visitors)}
       >
         <div class="stat-figure">
@@ -37,7 +37,7 @@ const Stats: FC<{
         </div>
         <div
           class={twMerge(
-            "w-full h-1 bg-accent mt-2 col-span-3",
+            "w-full h-1 bg-accent mt-1 col-span-2",
             metric === Metric.Visitors ? "visible" : "invisible",
           )}
         />
@@ -46,7 +46,7 @@ const Stats: FC<{
       {/* Page Views */}
       <button
         type="button"
-        class="stat text-start min-w-42"
+        class="stat text-start min-w-32"
         onClick={() => setMetric(Metric.Pageviews)}
       >
         <div class="stat-figure">
@@ -74,7 +74,7 @@ const Stats: FC<{
         </div>
         <div
           class={twMerge(
-            "w-full h-1 bg-accent mt-2 col-span-3",
+            "w-full h-1 bg-accent mt-1 col-span-2",
             metric === Metric.Pageviews ? "visible" : "invisible",
           )}
         />
