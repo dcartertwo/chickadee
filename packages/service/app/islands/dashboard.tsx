@@ -23,6 +23,7 @@ const Dashboard: FC<Props> = ({ tf, granularity, stats, timeline }) => {
     <div class="flex flex-col gap-4">
       <Stats stats={stats} metric={metric} setMetric={setMetric} />
       <Timeline timeline={timeline} granularity={granularity} metric={metric} />
+      <Dimensions dimensions={dimensions} />
     </div>
   );
 };
