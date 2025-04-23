@@ -10,16 +10,17 @@ import {
 } from "../lib/db";
 import { z } from "zod";
 import Dashboard from "../islands/dashboard";
-// import { getStatsMock, getTimelineMock } from "../lib/mock";
+import { getStatsMock, getTimelineMock } from "../lib/mock";
 
 export default createRoute(
   zValidator("query", z.object({ tf: ZTimeframe })),
   async (c) => {
+    // settings
     const sid = c.req.param("sid");
     const { tf } = c.req.valid("query");
+    const granularity = getDefaultGranularityIntervalForTimeframe(tf);
 
     // get data
-    const granularity = getDefaultGranularityIntervalForTimeframe(tf);
     const stats = await getStats(c, sid, tf);
     const timeline = await getTimeline(c, sid, tf, granularity);
     // DEBUG
