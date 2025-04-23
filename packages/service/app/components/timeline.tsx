@@ -1,7 +1,6 @@
 import { useMemo, type FC } from "hono/jsx";
 import Chart, { type Data, type Options } from "../islands/chart";
-import type { IGranularity, ITimeline } from "../lib/db";
-import { Metric } from "../lib/models";
+import { type IGranularity, type ITimeline, Metric } from "../lib/models";
 import type { ChartDataset } from "chart.js";
 
 const Timeline: FC<{

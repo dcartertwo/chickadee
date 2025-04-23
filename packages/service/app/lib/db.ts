@@ -3,6 +3,13 @@ import { z } from "zod";
 import { Column } from "../lib/datapoint";
 import { escapeSql } from "../lib/sql";
 import spacetime, { type Spacetime } from "spacetime";
+import {
+  ZStats,
+  ZTimelineItem,
+  type IGranularity,
+  type ITimeframe,
+  type ITimeline,
+} from "./models";
 
 // * Query
 
@@ -49,13 +56,6 @@ export async function query<T extends z.ZodTypeAny>(
 }
 
 // * Helpers
-
-export const TIMEFRAMES = ["today", "yesterday", "7d", "30d", "90d"] as const;
-export const ZTimeframe = z.enum(TIMEFRAMES).default("7d");
-export type ITimeframe = z.infer<typeof ZTimeframe>;
-
-export const ZGranularity = z.enum(["month", "week", "day", "hour"]);
-export type IGranularity = z.infer<typeof ZGranularity>;
 
 function getTimeframeDaysBack(tf: ITimeframe): number {
   switch (tf) {
@@ -113,14 +113,6 @@ function getGranularityInterval(g: IGranularity): string {
 
 // * Stats
 
-const ZStats = z.object({
-  visitors: z.coerce.number(),
-  visitorsGrowth: z.coerce.number().optional(),
-  views: z.coerce.number(),
-  viewsGrowth: z.coerce.number().optional(),
-});
-export type IStats = z.infer<typeof ZStats>;
-
 export async function getStats(c: Context<Env>, sid: string, tf: ITimeframe) {
   // TODO include percentage growth since last period
   const { data } = await query(
@@ -141,14 +133,6 @@ export async function getStats(c: Context<Env>, sid: string, tf: ITimeframe) {
 }
 
 // * Timeline
-
-const ZTimelineItem = z.object({
-  timestamp: z.string().transform((str) => new Date(`${str}Z`)), // Ensure UTC parsing by appending Z
-  views: z.coerce.number(),
-  visitors: z.coerce.number(),
-});
-const ZTimeline = ZTimelineItem.array();
-export type ITimeline = z.infer<typeof ZTimeline>;
 
 function generateTimeSeriesForInterval(
   start: Spacetime,

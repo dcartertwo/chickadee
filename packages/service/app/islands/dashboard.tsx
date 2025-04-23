@@ -1,8 +1,13 @@
 import { useState, type FC } from "hono/jsx";
 import Stats from "../components/stats";
 import Timeline from "../components/timeline";
-import type { IGranularity, IStats, ITimeline, ITimeframe } from "../lib/db";
-import { Metric } from "../lib/models";
+import {
+  type IGranularity,
+  type IStats,
+  type ITimeframe,
+  type ITimeline,
+  Metric,
+} from "../lib/models";
 
 interface Props {
   tf: ITimeframe;

@@ -6,21 +6,25 @@ export default createRoute(async (c) => {
     <article class="prose prose-lg text-center max-w-full">
       <h1>Setup a Site</h1>
       <p>
-        Enter the domain you'd like to add and add the following script to your
-        website:
+        Enter the domain or subdomain you'd like to add and add the following
+        script to your website:
       </p>
 
       <fieldset class="fieldset">
-        <legend class="fieldset-legend">Add Site</legend>
+        <legend class="fieldset-legend">Site Identifier (sid)</legend>
         <label class="input">
           <span class="icon-[carbon--link] scale-150" />
-          <input type="text" class="grow" placeholder="index.php" />
+          <input
+            name="sid"
+            type="text"
+            class="grow"
+            placeholder="chickadee.me"
+          />
         </label>
-
-        <p class="label">Optional</p>
+        <p class="label">only letters, </p>
       </fieldset>
 
-      <pre class="break-all">{script}</pre>
+      <pre>{script}</pre>
 
       <a href="/setup" class="btn btn-primary btn-xl btn-wide">
         Setup

@@ -1,4 +1,4 @@
-import type { IStats, ITimeline } from "./db";
+import type { IStats, ITimeline } from "./models";
 
 export function getStatsMock(): IStats {
   return {

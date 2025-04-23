@@ -1,6 +1,5 @@
 import type { FC } from "hono/jsx";
-import type { IStats } from "../lib/db";
-import { Metric } from "../lib/models";
+import { type IStats, Metric } from "../lib/models";
 import { twMerge } from "tailwind-merge";
 
 const Stats: FC<{
