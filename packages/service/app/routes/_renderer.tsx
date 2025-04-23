@@ -28,7 +28,7 @@ const DashboardLayout: FC<{ children: Child; class?: string }> = ({
     <BaseLayout>
       <Header />
 
-      <main class={twMerge("flex-grow flex flex-col p-4 lg:p-8", cn)}>
+      <main class={twMerge("flex-grow flex flex-col p-4 lg:p-8 gap-4", cn)}>
         {children}
       </main>
 
