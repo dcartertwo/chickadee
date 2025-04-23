@@ -10,7 +10,7 @@ const handler: NotFoundHandler = (c) => {
         Setup
       </a>
     </article>,
-    { class: "justify-center" },
+    { class: "justify-center items-center" },
   );
 };
 
