@@ -10,6 +10,8 @@ import {
 } from "chart.js";
 import "chartjs-adapter-spacetime";
 
+// * Setup ChartJS
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -29,16 +31,15 @@ function updateChartTheme(isDarkMode: boolean) {
     color: isDarkMode ? "#999" : "#666",
   };
 
-  // Apply defaults
+  // Defaults
   ChartJS.defaults.backgroundColor = theme.backgroundColor;
   ChartJS.defaults.borderColor = theme.borderColor;
   ChartJS.defaults.color = theme.color;
 
-  // Update all active charts
+  // Update all active charts color options
   for (const chart of Object.values(ChartJS.instances)) {
     if (!chart) continue;
 
-    // Update chart color options
     chart.options.backgroundColor = theme.backgroundColor;
     chart.options.borderColor = theme.borderColor;
     chart.options.color = theme.color;
@@ -57,5 +58,7 @@ function updateChartTheme(isDarkMode: boolean) {
 const prefersDarkMode = window.matchMedia("(prefers-color-scheme: dark)");
 prefersDarkMode.addEventListener("change", (e) => updateChartTheme(e.matches));
 updateChartTheme(prefersDarkMode.matches);
+
+// * Create HonoX client
 
 createClient();
