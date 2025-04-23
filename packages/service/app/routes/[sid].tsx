@@ -5,15 +5,16 @@ import {
   getDefaultGranularityIntervalForTimeframe,
   getStats,
   getTimeline,
-  ZTimeframe,
 } from "../lib/db";
 import { z } from "zod";
 import Dashboard from "../islands/dashboard";
 import { getStatsMock, getTimelineMock } from "../lib/mock";
 import { getSites } from "../lib/kv";
 import { Fragment } from "hono/jsx/jsx-runtime";
+import { ZSid, ZTimeframe } from "../lib/models";
 
 export default createRoute(
+  zValidator("param", z.object({ sid: ZSid })),
   zValidator("query", z.object({ tf: ZTimeframe })),
   async (c) => {
     // sites
