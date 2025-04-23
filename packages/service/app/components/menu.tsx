@@ -29,6 +29,12 @@ const SelectSite: FC<{ sites: string[]; sid: string }> = ({ sites, sid }) => {
             <a href={`/${site}`}>{site}</a>
           </li>
         ))}
+        <li>
+          <a href="/setup">
+            <span class="icon-[carbon--add] scale-150" />
+            Add Site
+          </a>
+        </li>
       </ul>
     </details>
   );
