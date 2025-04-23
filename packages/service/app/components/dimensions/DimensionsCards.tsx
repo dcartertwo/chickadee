@@ -123,8 +123,22 @@ export const DimensionsCardDevice: FC<{
           />
           <DimensionTab
             group="device"
+            label="Browser Version"
+            dimension={dimensions.find(
+              (d) => d.dimension === "browser_version",
+            )}
+            isDefault={false}
+          />
+          <DimensionTab
+            group="device"
             label="OS"
             dimension={dimensions.find((d) => d.dimension === "os")}
+            isDefault={false}
+          />
+          <DimensionTab
+            group="device"
+            label="OS Version"
+            dimension={dimensions.find((d) => d.dimension === "os_version")}
             isDefault={false}
           />
           <DimensionTab
@@ -163,7 +177,7 @@ const DimensionTab: FC<{
         checked={isDefault ?? false}
       />
       <div class="tab-content p-4">
-        <DimensionContent title="Referrer" bars={dimension?.bars ?? []} />
+        <DimensionContent title={label} bars={dimension?.bars ?? []} />
       </div>
     </Fragment>
   );
@@ -171,8 +185,9 @@ const DimensionTab: FC<{
 
 const DimensionContent: FC<{
   bars: IBar[];
-  title?: string;
+  title: string;
 }> = ({ bars, title }) => {
+  const max = bars.length > 0 ? bars[0].count : 0;
   return (
     <div class="space-y-1">
       <div class="flex justify-between text-sm opacity-70 mb-2">
@@ -181,9 +196,13 @@ const DimensionContent: FC<{
       </div>
 
       {bars.map((bar) => (
-        <div class="flex items-center justify-between py-2" key={bar.value}>
-          <div class="flex items-center gap-2">
-            <span>{bar.value}</span>
+        <div class="flex items-center justify-between" key={bar.value}>
+          <div class="flex items-center gap-2 relative flex-grow mr-4">
+            <div
+              class="absolute h-full bg-base-content/15 rounded-sm"
+              style={{ width: `${max > 0 ? (bar.count / max) * 100 : 0}%` }}
+            />
+            <span class="px-2 py-1">{bar.value}</span>
           </div>
           <span>{bar.count}</span>
         </div>
