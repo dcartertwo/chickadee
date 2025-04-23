@@ -3,7 +3,7 @@ import { TIMEFRAMES, type ITimeframe } from "../lib/db";
 
 const Menu: FC<{ sid: string; tf: ITimeframe }> = ({ sid, tf }) => {
   return (
-    <div class="flex flex-col xs:flex-row gap-4 justify-between items-center">
+    <div class="flex flex-row gap-4 justify-between items-center">
       <SelectSite sid={sid} />
       <SelectTimeframe tf={tf} />
     </div>
@@ -21,7 +21,7 @@ const SelectSite: FC<{ sid: string }> = ({ sid }) => {
         <span>{sid}</span>
         <span class="icon-[carbon--caret-down]" />
       </summary>
-      <ul class="menu dropdown-content bg-base-200 rounded-box z-1 w-52 p-2 shadow-sm">
+      <ul class="menu dropdown-content bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
         {items.map((item) => (
           <li key={item}>
             <a href={`/${item}`}>{item}</a>
@@ -48,7 +48,7 @@ const SelectTimeframe: FC<{ tf: ITimeframe }> = ({ tf }) => {
         <span>{labels[tf]}</span>
         <span class="icon-[carbon--caret-down]" />
       </summary>
-      <ul class="menu dropdown-content bg-base-200 rounded-box z-1 w-52 p-2 shadow-sm">
+      <ul class="menu dropdown-content bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
         {TIMEFRAMES.map((value) => (
           <li key={value}>
             <a href={`?tf=${value}`} class={tf === value ? "active" : ""}>
