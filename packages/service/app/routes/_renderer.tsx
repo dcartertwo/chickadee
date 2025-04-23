@@ -2,6 +2,7 @@ import type { Child, FC } from "hono/jsx";
 import { jsxRenderer } from "hono/jsx-renderer";
 import { Link, Script } from "honox/server";
 import { Footer, Header } from "../components/common";
+import { twMerge } from "tailwind-merge";
 
 const BaseLayout: FC<{ children: Child }> = ({ children }) => {
   return (
@@ -19,18 +20,29 @@ const BaseLayout: FC<{ children: Child }> = ({ children }) => {
   );
 };
 
-const DashboardLayout: FC<{ children: Child }> = ({ children }) => {
+const DashboardLayout: FC<{ children: Child; class?: string }> = ({
+  children,
+  class: cn = "",
+}) => {
   return (
     <BaseLayout>
       <Header />
 
-      <main class="flex-grow flex flex-col p-4 lg:p-8">{children}</main>
+      <main class={twMerge("flex-grow flex flex-col p-4 lg:p-8", cn)}>
+        {children}
+      </main>
 
       <Footer />
     </BaseLayout>
   );
 };
+declare module "hono" {
+  interface ContextRenderer {
+    // biome-ignore lint/style/useShorthandFunctionType: <explanation>
+    (content: string | Promise<string>, props?: { class?: string }): Response;
+  }
+}
 
-export default jsxRenderer(({ children }) => {
-  return <DashboardLayout>{children}</DashboardLayout>;
+export default jsxRenderer(({ children, class: cn = "" }) => {
+  return <DashboardLayout class={cn}>{children}</DashboardLayout>;
 });
