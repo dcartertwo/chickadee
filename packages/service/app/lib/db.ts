@@ -171,7 +171,7 @@ export async function getTimeline(
   sid: string,
   tf: ITimeframe,
   g: IGranularity
-) {
+): Promise<ITimeline> {
   const daysBack = getTimeframeDaysBack(tf);
   const group = getGranularityInterval(g);
 
