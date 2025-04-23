@@ -1,19 +1,21 @@
 import type { FC } from "hono/jsx";
 import { TIMEFRAMES, type ITimeframe } from "../lib/db";
 
-const Menu: FC<{ sid: string; tf: ITimeframe }> = ({ sid, tf }) => {
+const Menu: FC<{ sites: string[]; sid: string; tf: ITimeframe }> = ({
+  sites,
+  sid,
+  tf,
+}) => {
   return (
     <div class="flex flex-row gap-4 justify-between items-center">
-      <SelectSite sid={sid} />
+      <SelectSite sites={sites} sid={sid} />
       <SelectTimeframe tf={tf} />
     </div>
   );
 };
 export default Menu;
 
-const SelectSite: FC<{ sid: string }> = ({ sid }) => {
-  const items = ["chickadee.me", "begehr.me", "404.com"]; // TODO! show all sites
-
+const SelectSite: FC<{ sites: string[]; sid: string }> = ({ sites, sid }) => {
   return (
     <details class="dropdown">
       <summary class="btn m-1 space-x-1">
@@ -22,9 +24,9 @@ const SelectSite: FC<{ sid: string }> = ({ sid }) => {
         <span class="icon-[carbon--caret-down]" />
       </summary>
       <ul class="menu dropdown-content bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
-        {items.map((item) => (
-          <li key={item}>
-            <a href={`/${item}`}>{item}</a>
+        {sites.map((site) => (
+          <li key={site}>
+            <a href={`/${site}`}>{site}</a>
           </li>
         ))}
       </ul>
