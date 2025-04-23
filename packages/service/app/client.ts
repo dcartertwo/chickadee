@@ -21,22 +21,44 @@ ChartJS.register(
 
 // Set chart theme based on user's color scheme preference
 function updateChartTheme(isDarkMode: boolean) {
-  if (isDarkMode) {
-    // Dark mode
-    ChartJS.defaults.backgroundColor = "rgba(255, 255, 255, 0.1)";
-    ChartJS.defaults.borderColor = "rgba(255, 255, 255, 0.1)";
-    ChartJS.defaults.color = "#999";
-  } else {
-    // Light mode
-    ChartJS.defaults.backgroundColor = "rgba(0, 0, 0, 0.1)";
-    ChartJS.defaults.borderColor = "rgba(0, 0, 0, 0.1)";
-    ChartJS.defaults.color = "#666";
-  }
+  const theme = {
+    backgroundColor: isDarkMode
+      ? "rgba(255, 255, 255, 0.1)"
+      : "rgba(0, 0, 0, 0.1)",
+    borderColor: isDarkMode ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.1)",
+    color: isDarkMode ? "#999" : "#666",
+  };
+
+  // Apply defaults
+  ChartJS.defaults.backgroundColor = theme.backgroundColor;
+  ChartJS.defaults.borderColor = theme.borderColor;
+  ChartJS.defaults.color = theme.color;
 
   // Update all active charts
-  Object.values(ChartJS.instances).forEach((chart) => {
-    if (chart) chart.update();
-  });
+  for (const chart of Object.values(ChartJS.instances)) {
+    if (!chart) continue;
+
+    // Update chart color options
+    chart.options.backgroundColor = theme.backgroundColor;
+    chart.options.borderColor = theme.borderColor;
+    chart.options.color = theme.color;
+    if (chart.options.scales) {
+      if (chart.options.scales.x) {
+        if (chart.options.scales.x.grid)
+          chart.options.scales.x.grid.color = theme.borderColor;
+        if (chart.options.scales.x.ticks)
+          chart.options.scales.x.ticks.color = theme.color;
+      }
+      if (chart.options.scales.y) {
+        if (chart.options.scales.y.grid)
+          chart.options.scales.y.grid.color = theme.borderColor;
+        if (chart.options.scales.y.ticks)
+          chart.options.scales.y.ticks.color = theme.color;
+      }
+    }
+
+    chart.update();
+  }
 }
 const prefersDarkMode = window.matchMedia("(prefers-color-scheme: dark)");
 prefersDarkMode.addEventListener("change", (e) => updateChartTheme(e.matches));
