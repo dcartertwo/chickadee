@@ -63,7 +63,7 @@ const DIMENSIONS = [
 export type IDimension = (typeof DIMENSIONS)[number];
 export const ZBar = z.object({
   value: z.string(),
-  count: z.number(),
+  count: z.coerce.number(),
 });
 export type IBar = z.infer<typeof ZBar>;
 export const ZDimensionBars = z.object({

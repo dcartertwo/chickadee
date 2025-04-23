@@ -202,7 +202,9 @@ const DimensionContent: FC<{
               class="absolute h-full bg-base-content/15 rounded-sm"
               style={{ width: `${max > 0 ? (bar.count / max) * 100 : 0}%` }}
             />
-            <span class="px-2 py-1">{bar.value}</span>
+            <span class="px-2 py-1">
+              {bar.value ? bar.value : "(no value)"}
+            </span>
           </div>
           <span>{bar.count}</span>
         </div>
