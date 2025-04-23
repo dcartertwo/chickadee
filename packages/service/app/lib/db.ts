@@ -2,6 +2,7 @@ import type { Context, Env } from "hono";
 import { z } from "zod";
 import { Column } from "../lib/datapoint";
 import { escapeSql } from "../lib/sql";
+import spacetime, { type Spacetime } from "spacetime";
 
 // * Query
 
@@ -56,21 +57,24 @@ export type ITimeframe = z.infer<typeof ZTimeframe>;
 export const ZGranularity = z.enum(["month", "week", "day", "hour"]);
 export type IGranularity = z.infer<typeof ZGranularity>;
 
-function getTimeframeInterval(tf: ITimeframe): string {
+function getTimeframeDaysBack(tf: ITimeframe): number {
   switch (tf) {
     case "today":
-      return "'1' DAY";
+      return 0;
     case "yesterday":
-      return "'2' DAY";
+      return 1;
     case "7d":
-      return "'7' DAY";
+      return 6;
     case "30d":
-      return "'30' DAY";
+      return 29;
     case "90d":
-      return "'90' DAY";
-    default:
-      throw new Error(`Invalid timeframe: ${tf}`);
+      return 89;
   }
+}
+
+function getTimeframeFilter(tf: ITimeframe): string {
+  const daysBack = getTimeframeDaysBack(tf);
+  return `timestamp >= toStartOfInterval(now(), INTERVAL '1' DAY) - INTERVAL '${daysBack}' DAY`;
 }
 
 export function getDefaultGranularityIntervalForTimeframe(
@@ -118,8 +122,6 @@ const ZStats = z.object({
 export type IStats = z.infer<typeof ZStats>;
 
 export async function getStats(c: Context<Env>, sid: string, tf: ITimeframe) {
-  const interval = getTimeframeInterval(tf);
-
   // TODO include percentage growth since last period
   const { data } = await query(
     c.env,
@@ -131,7 +133,7 @@ export async function getStats(c: Context<Env>, sid: string, tf: ITimeframe) {
     WHERE
       ${Column.sid} = ${escapeSql(sid)} AND
       ${Column.evt} = 'view' AND
-      timestamp > now() - INTERVAL ${interval}
+      ${getTimeframeFilter(tf)}
     `,
     ZStats
   );
@@ -140,15 +142,29 @@ export async function getStats(c: Context<Env>, sid: string, tf: ITimeframe) {
 
 // * Timeline
 
-// TODO! fill timeline x-axis with empty values
-
 const ZTimelineItem = z.object({
-  timestamp: z.coerce.date(),
+  timestamp: z.string().transform((str) => new Date(`${str}Z`)), // Ensure UTC parsing by appending Z
   views: z.coerce.number(),
   visitors: z.coerce.number(),
 });
 const ZTimeline = ZTimelineItem.array();
 export type ITimeline = z.infer<typeof ZTimeline>;
+
+function generateTimeSeriesForInterval(
+  start: Spacetime,
+  end: Spacetime,
+  granularity: IGranularity
+): Spacetime[] {
+  const dates: Spacetime[] = [];
+  let current = start.clone();
+
+  while (current.isBefore(end) || current.isSame(end, "minute")) {
+    dates.push(current);
+    current = current.add(1, granularity);
+  }
+
+  return dates;
+}
 
 export async function getTimeline(
   c: Context<Env>,
@@ -156,7 +172,7 @@ export async function getTimeline(
   tf: ITimeframe,
   g: IGranularity
 ) {
-  const interval = getTimeframeInterval(tf);
+  const daysBack = getTimeframeDaysBack(tf);
   const group = getGranularityInterval(g);
 
   const { data } = await query(
@@ -170,13 +186,33 @@ export async function getTimeline(
     WHERE
       ${Column.sid} = ${escapeSql(sid)} AND
       ${Column.evt} = 'view' AND
-      timestamp > now() - INTERVAL ${interval}
+      ${getTimeframeFilter(tf)}
     GROUP BY timestamp
     ORDER BY timestamp ASC
     `,
     ZTimelineItem
   );
-  return data;
+
+  // Fill in missing timestamps
+  const start = spacetime.now("utc").startOf("day").subtract(daysBack, "day");
+  const end = spacetime.now("utc").startOf("day");
+  const series = generateTimeSeriesForInterval(start, end, g);
+  console.debug("series", series);
+  const dataMap = new Map(data.map((item) => [item.timestamp.getTime(), item]));
+  console.debug("data", data);
+  const filled = series.map((ts) => {
+    const existing = dataMap.get(ts.epoch);
+    return (
+      existing ?? {
+        timestamp: ts.toNativeDate(),
+        views: 0,
+        visitors: 0,
+      }
+    );
+  });
+  console.debug("filled", filled);
+
+  return filled;
 }
 
 // * TODOs
