@@ -16,7 +16,7 @@ app.use((c, next) =>
 
 // cors
 app.use(
-  // TODO! how to cors for dashboard?
+  // TODO allow only from dashboard?
   cors({
     origin: "*", // allow all origins
     allowMethods: ["OPTIONS", "GET", "POST"],

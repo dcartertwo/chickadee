@@ -12,7 +12,7 @@ const Menu: FC<{ sid: string; tf: ITimeframe }> = ({ sid, tf }) => {
 export default Menu;
 
 const SelectSite: FC<{ sid: string }> = ({ sid }) => {
-  const items = ["chickadee.me", "begehr.me", "404.com"]; // TODO! get em
+  const items = ["chickadee.me", "begehr.me", "404.com"]; // TODO! show all sites
 
   return (
     <details class="dropdown">

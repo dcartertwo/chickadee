@@ -120,7 +120,7 @@ export type IStats = z.infer<typeof ZStats>;
 export async function getStats(c: Context<Env>, sid: string, tf: ITimeframe) {
   const interval = getTimeframeInterval(tf);
 
-  // TODO! return percentage growth
+  // TODO include percentage growth since last period
   const { data } = await query(
     c.env,
     `
