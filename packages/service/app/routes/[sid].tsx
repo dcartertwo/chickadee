@@ -21,11 +21,11 @@ export default createRoute(
     const granularity = getDefaultGranularityIntervalForTimeframe(tf);
 
     // get data
-    // const stats = await getStats(c, sid, tf);
-    // const timeline = await getTimeline(c, sid, tf, granularity);
+    const stats = await getStats(c, sid, tf);
+    const timeline = await getTimeline(c, sid, tf, granularity);
     // DEBUG
-    const stats = getStatsMock();
-    const timeline = getTimelineMock();
+    // const stats = getStatsMock();
+    // const timeline = getTimelineMock();
 
     return c.render(
       <div class="h-dvh flex flex-col">
