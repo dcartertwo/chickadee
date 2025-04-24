@@ -24,7 +24,7 @@ const SelectSite: FC<{ sites: string[]; sid: string }> = ({ sites, sid }) => {
         <span class="icon-[carbon--caret-down]" />
       </summary>
       <ul class="menu dropdown-content bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
-        {sites.map((site) => (
+        {sites.toSorted().map((site) => (
           <li key={site}>
             <a href={`/${site}`}>{site}</a>
           </li>
