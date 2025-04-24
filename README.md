@@ -33,12 +33,22 @@ Copy `./packages/app/.dev.vars.example` to `./packages/app/.dev.vars` and set th
 - <https://withcabin.com>
 - <https://matomo.org>
 
+### Daily Unique Visitor Count
+
+To count daily unique visitors without cookies, we use a fingerprint hash that rotates daily:
+
+`hash(daily_salt + sid + ip + userAgent + acceptLanguage)`
+
+Props to Plausible.io for the concept: <https://plausible.io/data-policy#how-we-count-unique-users-without-cookies>.
+
 ## TODOs
 
-- [ ] TODO! landing page
-- [ ] TODO! demo dashboard
-- [x] favicon on LP and dashboard
+- [x] landing page
+- [x] events endpoint
+- [x] script for client-side page views
+- [x] count daily unique visitors
 - [x] dashboard with graphs
+- [ ] demo dashboard (TODO!)
 - [ ] cli for easy deployment
 - [ ] live-mode
 - [ ] page with grid of all sites
