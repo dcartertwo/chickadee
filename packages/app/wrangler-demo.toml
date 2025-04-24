@@ -1,4 +1,4 @@
-name = "chickadee"
+name = "chickadee-demo"
 main = "./dist/index.js"
 compatibility_date = "2024-04-01"
 compatibility_flags = ["nodejs_compat"]
@@ -8,16 +8,15 @@ directory = "dist"
 
 [vars]
 ENVIRONMENT = "production"
-ENGINE_DATASET = "chickadee"
-BASIC_USERNAME = "admin"
+ENGINE_DATASET = "chickadee-demo"
 
 [[analytics_engine_datasets]]
 binding = "ENGINE"
-dataset = "chickadee"
+dataset = "chickadee-demo"
 
 [[kv_namespaces]]
 binding = "KV"
-id = "59b4b7859e5c472ea94a4a3e47d050e4"
+id = "33a1e296325f4d24b5158253ca9cf3bc"
 
 [observability]
 enabled = true

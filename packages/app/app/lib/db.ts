@@ -124,7 +124,7 @@ export async function getStats(c: Context<Env>, sid: string, tf: ITimeframe) {
     SELECT
       sum(_sample_interval) as views,
       count(DISTINCT ${Column.dailyVisitorHash}) as visitors
-    FROM chickadee
+    FROM ${c.env.ENGINE_DATASET}
     WHERE
       ${Column.sid} = ${escapeSql(sid)} AND
       ${Column.evt} = 'view' AND
@@ -169,7 +169,7 @@ export async function getTimeline(
       toStartOfInterval(timestamp, INTERVAL ${group}) as timestamp,
       sum(_sample_interval) as views,
       count(DISTINCT ${Column.dailyVisitorHash}) as visitors
-    FROM chickadee
+    FROM ${c.env.ENGINE_DATASET}
     WHERE
       ${Column.sid} = ${escapeSql(sid)} AND
       ${Column.evt} = 'view' AND
@@ -240,7 +240,7 @@ export async function getDimensions(
         `SELECT
           ${dim.column} as value,
           count(DISTINCT ${Column.dailyVisitorHash}) as count
-        FROM chickadee
+        FROM ${c.env.ENGINE_DATASET}
         WHERE
           ${Column.sid} = ${escapeSql(sid)} AND
           ${Column.evt} = 'view' AND

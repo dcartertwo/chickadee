@@ -24,6 +24,11 @@ const BaseLayout: FC<{ children: Child }> = ({ children }) => {
           src="https://chickadee-demo.5sides.workers.dev/script.js"
           data-domain="chickadee.me"
         />
+        <script
+          defer
+          src="https://chickadee.5sides.workers.dev/script.js"
+          data-domain="chickadee.me"
+        />
       </head>
       <body class="min-h-dvh flex flex-col">{children}</body>
     </html>

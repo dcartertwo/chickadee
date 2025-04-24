@@ -27,7 +27,7 @@ app.use(
 app.get("/debug", async (c) => {
   const res = await query(
     c.env,
-    "SELECT * FROM chickadee ORDER BY timestamp DESC LIMIT 10",
+    `SELECT * FROM ${c.env.ENGINE_DATASET} ORDER BY timestamp DESC LIMIT 10`,
     z.any()
   );
   return c.json(res);
