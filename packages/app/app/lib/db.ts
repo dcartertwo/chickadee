@@ -182,7 +182,7 @@ export async function getTimeline(
 
   // Fill in missing timestamps
   const start = spacetime.now("utc").startOf("day").subtract(daysBack, "day");
-  const end = spacetime.now("utc").endOf("day");
+  const end = spacetime.now("utc");
   const series = generateTimeSeriesForInterval(start, end, g);
   console.debug("series", series);
   const dataMap = new Map(data.map((item) => [item.timestamp.getTime(), item]));
