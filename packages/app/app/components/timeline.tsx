@@ -61,7 +61,12 @@ const Timeline: FC<{
     };
   }, [timeline, metric]);
 
-  return <Chart class="h-96 w-full" options={options} data={data} />;
+  return (
+    <div class="space-y-1">
+      <Chart class="h-96 w-full" options={options} data={data} />
+      <p class="text-xs text-gray-500 text-end">(time in UTC)</p>
+    </div>
+  );
 };
 
 export default Timeline;
