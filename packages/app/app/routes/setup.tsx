@@ -7,6 +7,23 @@ export const POST = createRoute(async (c) => {
   const body = await c.req.parseBody();
   const parsed = ZSid.safeParse(body.sid);
 
+  // demo
+  if (c.env.ENVIRONMENT === "demo") {
+    return c.render(
+      <article class="prose prose-lg text-center max-w-full">
+        <h1>Demo Mode</h1>
+        <p>
+          Chickadee is currently in demo mode. Setting up new sites is disabled.
+        </p>
+        <p>This is a read-only demonstration of the dashboard functionality.</p>
+        <a href="/" class="btn btn-primary btn-xl btn-wide">
+          Return to Dashboard
+        </a>
+      </article>,
+      { class: "justify-center items-center" },
+    );
+  }
+
   // parsing failed
   if (!parsed.success) {
     const error = parsed.error.format()._errors.join(" ");
@@ -23,6 +40,7 @@ export const POST = createRoute(async (c) => {
     );
   }
 
+  // add site
   const sid = parsed.data;
   await addSite(c, sid);
   const script = `

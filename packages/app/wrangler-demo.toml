@@ -7,7 +7,7 @@ compatibility_flags = ["nodejs_compat"]
 directory = "dist"
 
 [vars]
-ENVIRONMENT = "production"
+ENVIRONMENT = "demo"
 ENGINE_DATASET = "chickadee_demo"
 
 [[analytics_engine_datasets]]

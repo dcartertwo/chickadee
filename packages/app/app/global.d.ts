@@ -4,7 +4,7 @@ declare module "hono" {
   interface Env {
     Variables: object;
     Bindings: {
-      ENVIRONMENT: "development" | "production";
+      ENVIRONMENT: "dev" | "prod" | "demo";
       // Auth
       BASIC_USERNAME: string;
       BASIC_PASSWORD: string;

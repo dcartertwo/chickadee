@@ -7,7 +7,7 @@ compatibility_flags = ["nodejs_compat"]
 directory = "dist"
 
 [vars]
-ENVIRONMENT = "production"
+ENVIRONMENT = "prod"
 ENGINE_DATASET = "chickadee"
 BASIC_USERNAME = "admin"
 
