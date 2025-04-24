@@ -35,7 +35,16 @@ export const POST = createRoute(async (c) => {
     <article class="prose prose-lg text-center max-w-full">
       <h1>Setup Complete</h1>
       <p>Add the following script to your website:</p>
-      <pre class="text-start">{script}</pre>
+      <pre class="relative text-start">
+        {script}
+        <button
+          type="button"
+          class="btn btn-ghost btn-sm btn-square absolute right-2 top-2"
+          onclick="navigator.clipboard.writeText(this.parentElement.textContent)"
+        >
+          <span class="icon-[carbon--copy] text-base" />
+        </button>
+      </pre>
       <a href={`/${sid}`} class="btn btn-primary btn-xl btn-wide">
         Go to site
       </a>
