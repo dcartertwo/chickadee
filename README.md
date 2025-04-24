@@ -30,7 +30,7 @@ TODO! how to deploy chickadee
 ## TODOs
 
 - [ ] TODO! landing page
-- [ ] TODO! favicon on LP and dashboard
+- [x] favicon on LP and dashboard
 - [x] dashboard with graphs
 - [ ] cli for easy deployment
 - [ ] live-mode
