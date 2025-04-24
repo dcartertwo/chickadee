@@ -11,7 +11,7 @@ const BaseLayout: FC<{ children: Child }> = ({ children }) => {
         <title>Chickadee Analytics</title>
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 
-        <link href="/static/style.css" rel="stylesheet" />
+        <link href="/style.css" rel="stylesheet" />
 
         <script
           defer
