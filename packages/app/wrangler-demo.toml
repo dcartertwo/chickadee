@@ -8,11 +8,11 @@ directory = "dist"
 
 [vars]
 ENVIRONMENT = "production"
-ENGINE_DATASET = "chickadee-demo"
+ENGINE_DATASET = "chickadee_demo"
 
 [[analytics_engine_datasets]]
 binding = "ENGINE"
-dataset = "chickadee-demo"
+dataset = "chickadee_demo"
 
 [[kv_namespaces]]
 binding = "KV"
