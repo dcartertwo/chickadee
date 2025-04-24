@@ -1,6 +1,5 @@
 {
   "name": "chickadee",
-  "version": "0.0.1",
   "description": "Simple, privacy-focused web analytics you can self-host on Cloudflare.",
   "keywords": [
     "website",
