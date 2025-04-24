@@ -1,5 +1,6 @@
 import type { Child, FC } from "hono/jsx";
 import { jsxRenderer } from "hono/jsx-renderer";
+import { Link, Script } from "honox/server";
 
 const BaseLayout: FC<{ children: Child }> = ({ children }) => {
   return (
@@ -11,7 +12,8 @@ const BaseLayout: FC<{ children: Child }> = ({ children }) => {
         <title>Chickadee Analytics</title>
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 
-        <link href="/style.css" rel="stylesheet" />
+        <Link href="/app/style.css" rel="stylesheet" />
+        <Script src="/app/client.ts" async />
 
         <script
           defer
@@ -65,6 +67,6 @@ export const Footer: FC = () => {
   );
 };
 
-export const renderer = jsxRenderer(({ children }) => {
+export default jsxRenderer(({ children }) => {
   return <LandingLayout>{children}</LandingLayout>;
 });

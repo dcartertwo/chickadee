@@ -4,13 +4,14 @@
   "scripts": {
     "dev": "vite",
     "check-types": "tsc --noEmit",
-    "build": "vite build",
+    "build": "vite build --mode client && vite build",
     "preview": "wrangler pages dev",
-    "deploy": "pnpm run build && wrangler pages deploy",
-    "cf-typegen": "wrangler types --env-interface CloudflareBindings"
+    "deploy": "$npm_execpath run build && wrangler pages deploy",
+    "wrangler": "exec wrangler"
   },
   "dependencies": {
-    "hono": "^4.7.7"
+    "hono": "^4.7.7",
+    "honox": "^0.1.40"
   },
   "devDependencies": {
     "@hono/vite-dev-server": "^0.18.2",
