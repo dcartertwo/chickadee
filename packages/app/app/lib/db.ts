@@ -183,7 +183,7 @@ export async function getTimeline(
   // Fill in missing timestamps
   const start = spacetime.now("utc").startOf("day").subtract(daysBack, "day");
   const end = spacetime.now("utc").startOf("day");
-  const series = generateTimeSeriesForInterval(start, end, g);
+  const series = generateTimeSeriesForInterval(start, end, g); // TODO! fix daily chart
   console.debug("series", series);
   const dataMap = new Map(data.map((item) => [item.timestamp.getTime(), item]));
   console.debug("data", data);
@@ -258,10 +258,3 @@ export async function getDimensions(
     bars: result.data,
   })) satisfies IDimensionBars[];
 }
-
-// * TODOs
-
-// TODO! dimensions: ref, UTM, path, country, region, city, timezone, browser, os, device, locale
-// TODO metrics: width, loadTime
-
-// TODO! filter by dimensions

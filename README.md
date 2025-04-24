@@ -4,8 +4,7 @@ Chickadee is a self-managed, open-source website analytics tool running on a Clo
 
 Monorepo:
 
-- `./packages/service` - the service: events endpoint, client script, and dashboard
-- `./packages/cli` - used for deploying the service
+- `./packages/app` - the service: events endpoint, client script, and dashboard
 - `./packages/web` - the landing page: <https://www.chickadee.me>
 
 ## Deploy your Own
@@ -16,7 +15,7 @@ TODO! how to deploy chickadee
 
 ### Dev Vars
 
-`./packages/service/.dev.vars` is used for local development:
+`./packages/app/.dev.vars` is used for local development:
 
 - `BASIC_PASSWORD` - the password for basic auth to access the dashboard
 - `CLOUDFLARE_API_TOKEN` - Cloudflare account token with "Access: Analytics" Read permission: <https://developers.cloudflare.com/analytics/analytics-engine/get-started/#create-an-api-token>
@@ -30,9 +29,13 @@ TODO! how to deploy chickadee
 
 ## TODOs
 
-- [ ] website landing page
-- [ ] favicon on LP and dashboard
-- [ ] dashboard with graphs and stuff
+- [ ] TODO! landing page
+- [ ] TODO! favicon on LP and dashboard
+- [x] dashboard with graphs
 - [ ] cli for easy deployment
 - [ ] live-mode
 - [ ] page with grid of all sites
+- [ ] add loadTime metric to dashboard
+- [ ] add screen size to dashboard?
+- [ ] filter dashboard by dimensions
+- [ ] add retention to dashboard (based on user id)

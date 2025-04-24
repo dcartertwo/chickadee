@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "Cloudflare-powered, self-managed, open-source analytics",
   "scripts": {
-    "service": "pnpm --filter @chickadee/service",
+    "app": "pnpm --filter @chickadee/app",
     "web": "pnpm --filter @chickadee/web",
     "build": "turbo run build",
     "check": "turbo run check",
