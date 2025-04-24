@@ -14,7 +14,7 @@
     "honox": "^0.1.40"
   },
   "devDependencies": {
-    "@hono/vite-dev-server": "^0.18.2",
+    "@hono/vite-dev-server": "^0.18.3",
     "@hono/vite-ssg": "^0.1.2",
     "@iconify-json/carbon": "^1.2.8",
     "@iconify/tailwind4": "^1.0.6",
@@ -23,6 +23,6 @@
     "daisyui": "^5.0.28",
     "tailwindcss": "^4.1.4",
     "vite": "^6.3.3",
-    "wrangler": "^4.4.0"
+    "wrangler": "^4.13.0"
   }
 }

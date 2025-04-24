@@ -95,7 +95,7 @@ importers:
         version: 0.1.40(hono@4.7.7)(miniflare@4.20250422.0)(wrangler@4.13.0(@cloudflare/workers-types@4.20250424.0))
     devDependencies:
       '@hono/vite-dev-server':
-        specifier: ^0.18.2
+        specifier: ^0.18.3
         version: 0.18.3(hono@4.7.7)(miniflare@4.20250422.0)(wrangler@4.13.0(@cloudflare/workers-types@4.20250424.0))
       '@hono/vite-ssg':
         specifier: ^0.1.2
@@ -122,7 +122,7 @@ importers:
         specifier: ^6.3.3
         version: 6.3.3(@types/node@22.14.1)(jiti@2.4.2)(lightningcss@1.29.2)(yaml@2.7.1)
       wrangler:
-        specifier: ^4.4.0
+        specifier: ^4.13.0
         version: 4.13.0(@cloudflare/workers-types@4.20250424.0)
 
 packages:
@@ -2012,7 +2012,7 @@ snapshots:
 
   '@babel/generator@7.25.6':
     dependencies:
-      '@babel/types': 7.27.0
+      '@babel/types': 7.25.6
       '@jridgewell/gen-mapping': 0.3.8
       '@jridgewell/trace-mapping': 0.3.25
       jsesc: 2.5.2
@@ -2023,7 +2023,7 @@ snapshots:
 
   '@babel/parser@7.25.6':
     dependencies:
-      '@babel/types': 7.27.0
+      '@babel/types': 7.25.6
 
   '@babel/parser@7.27.0':
     dependencies:
@@ -2039,9 +2039,9 @@ snapshots:
     dependencies:
       '@babel/code-frame': 7.26.2
       '@babel/generator': 7.25.6
-      '@babel/parser': 7.27.0
+      '@babel/parser': 7.25.6
       '@babel/template': 7.27.0
-      '@babel/types': 7.27.0
+      '@babel/types': 7.25.6
       debug: 4.4.0
       globals: 11.12.0
     transitivePeerDependencies:
@@ -2706,7 +2706,7 @@ snapshots:
 
   '@vue/compiler-core@3.5.13':
     dependencies:
-      '@babel/parser': 7.27.0
+      '@babel/parser': 7.25.6
       '@vue/shared': 3.5.13
       entities: 4.5.0
       estree-walker: 2.0.2
@@ -2719,7 +2719,7 @@ snapshots:
 
   '@vue/compiler-sfc@3.5.13':
     dependencies:
-      '@babel/parser': 7.27.0
+      '@babel/parser': 7.25.6
       '@vue/compiler-core': 3.5.13
       '@vue/compiler-dom': 3.5.13
       '@vue/compiler-ssr': 3.5.13
