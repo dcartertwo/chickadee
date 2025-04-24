@@ -8,6 +8,10 @@ const BaseLayout: FC<{ children: Child }> = ({ children }) => {
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+          name="description"
+          content="Simple, privacy-focused web analytics you can self-host on Cloudflare."
+        />
 
         <title>Chickadee Analytics</title>
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
