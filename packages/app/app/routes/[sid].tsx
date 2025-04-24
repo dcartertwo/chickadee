@@ -28,9 +28,11 @@ export default createRoute(
     const granularity = getDefaultGranularityIntervalForTimeframe(tf);
 
     // get data
-    const stats = await getStats(c, sid, tf);
-    const timeline = await getTimeline(c, sid, tf, granularity);
-    const dimensions = await getDimensions(c, sid, tf);
+    const [stats, timeline, dimensions] = await Promise.all([
+      getStats(c, sid, tf),
+      getTimeline(c, sid, tf, granularity),
+      getDimensions(c, sid, tf),
+    ]);
     // DEBUG
     // const stats = getStatsMock();
     // const timeline = getTimelineMock();
