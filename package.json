@@ -1,7 +1,14 @@
 {
   "name": "chickadee",
   "version": "0.0.1",
-  "description": "Cloudflare-powered, self-managed, open-source analytics",
+  "description": "open-source, self-managed, privacy-focused analytics running on a Cloudflare Worker",
+  "keywords": [
+    "analytics",
+    "website",
+    "self-managed",
+    "privacy",
+    "cloudflare-worker"
+  ],
   "scripts": {
     "app": "pnpm --filter @chickadee/app",
     "web": "pnpm --filter @chickadee/web",
