@@ -17,8 +17,6 @@ Monorepo:
 6. Set all secrets listed in the [Secrets](#secrets) section on you worker: `pnpm app wrangler secret put …`.
 7. Open your worker URL in your browser and login with username `admin` and password `BASIC_PASSWORD` configured in step 6.
 
-<!-- TODO add cli for easier deployment -->
-
 ## Development
 
 ### Secrets
