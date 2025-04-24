@@ -21,7 +21,7 @@ const BaseLayout: FC<{ children: Child }> = ({ children }) => {
           data-domain="chickadee.me"
         />
       </head>
-      <body>{children}</body>
+      <body class="min-h-dvh flex flex-col">{children}</body>
     </html>
   );
 };

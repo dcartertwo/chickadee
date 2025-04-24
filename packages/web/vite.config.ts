@@ -16,6 +16,10 @@ export default defineConfig(({ mode }) => {
     build: {
       emptyOutDir: false,
     },
-    plugins: [honox(), ssg({ entry })],
+    plugins: [
+      honox(),
+      ssg({ entry }),
+      mode === "development" ? tailwindcss() : null,
+    ],
   };
 });
