@@ -27,9 +27,10 @@ export const POST = createRoute(async (c) => {
   await addSite(c, sid);
   const script = `
 <script
-  src="https://[WORKER_DOMAIN].workers.dev/script.js"
+  defer
   data-domain="${sid}"
-></script>`;
+  src="https://[WORKER_DOMAIN].workers.dev/script.js"
+/>`;
   return c.render(
     <article class="prose prose-lg text-center max-w-full">
       <h1>Setup Complete</h1>
