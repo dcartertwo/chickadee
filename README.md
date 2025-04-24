@@ -36,6 +36,7 @@ Copy `./packages/app/.dev.vars.example` to `./packages/app/.dev.vars` and set th
 ## TODOs
 
 - [ ] TODO! landing page
+- [ ] TODO! demo dashboard
 - [x] favicon on LP and dashboard
 - [x] dashboard with graphs
 - [ ] cli for easy deployment

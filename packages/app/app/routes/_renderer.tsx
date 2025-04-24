@@ -38,6 +38,7 @@ const DashboardLayout: FC<{ children: Child; class?: string }> = ({
     </BaseLayout>
   );
 };
+
 declare module "hono" {
   interface ContextRenderer {
     // biome-ignore lint/style/useShorthandFunctionType: <explanation>
