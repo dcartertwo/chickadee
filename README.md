@@ -35,3 +35,4 @@ TODO! how to deploy chickadee
 - [ ] dashboard with graphs and stuff
 - [ ] cli for easy deployment
 - [ ] live-mode
+- [ ] page with grid of all sites
