@@ -1,3 +1,4 @@
+import "./style.css";
 import { Hono } from "hono";
 import { renderer } from "./renderer";
 
