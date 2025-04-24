@@ -19,8 +19,10 @@ export default createRoute((c) => {
               >
                 Get Started with GitHub
               </a>
-              {/* TODO! chickadee-demo */}
-              <a href="/demo" className="btn btn-outline">
+              <a
+                href="https://chickadee-demo.5sides.workers.dev"
+                className="btn btn-outline"
+              >
                 Browse the Demo
               </a>
             </div>

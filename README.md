@@ -24,8 +24,9 @@ Monorepo:
 
 Copy `./packages/app/.dev.vars.example` to `./packages/app/.dev.vars` and set the following secrets:
 
-- `BASIC_PASSWORD` - the password for basic auth to access the dashboard
+- `ACCOUNT_ID` - your Cloudflare account ID, find it on the [Cloudflare dashboard](https://dash.cloudflare.com) under Workers & Pages on the right side.
 - `CLOUDFLARE_API_TOKEN` - Cloudflare account token with "Access: Analytics" Read permission: <https://developers.cloudflare.com/analytics/analytics-engine/get-started/#create-an-api-token>
+- `BASIC_PASSWORD` - the password for basic auth to access the dashboard (optional but recommended, since otherwise anyone can view your stats)
 
 ## Inspired by
 
