@@ -50,7 +50,7 @@ Props to Plausible.io for the concept: <https://plausible.io/data-policy#how-we-
 - [x] script for client-side page views
 - [x] count daily unique visitors
 - [x] dashboard with graphs
-- [ ] demo dashboard (TODO!)
+- [x] demo dashboard
 - [ ] cli for easy deployment
 - [ ] live-mode
 - [ ] page with grid of all sites
