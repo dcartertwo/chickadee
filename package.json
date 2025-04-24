@@ -1,12 +1,12 @@
 {
   "name": "chickadee",
   "version": "0.0.1",
-  "description": "open-source, self-managed, privacy-focused analytics running on a Cloudflare Worker",
+  "description": "Simple, privacy-focused web analytics you can self-host on Cloudflare.",
   "keywords": [
-    "analytics",
     "website",
-    "self-managed",
+    "analytics",
     "privacy",
+    "self-hosted",
     "cloudflare-worker"
   ],
   "scripts": {
@@ -19,13 +19,6 @@
     "lint": "biome lint --write",
     "format": "biome format --write"
   },
-  "keywords": [
-    "analytics",
-    "website",
-    "analytics",
-    "self-hosted",
-    "Cloudflare"
-  ],
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
     "turbo": "^2.5.0"

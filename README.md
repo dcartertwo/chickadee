@@ -1,6 +1,6 @@
-# 🐦 Chickadee
+# 🐦 Chickadee Analytics
 
-Chickadee is an open-source, self-managed, privacy-focused analytics running on a Cloudflare Worker.
+Simple, privacy-focused web analytics you can self-host on Cloudflare.
 
 Monorepo:
 
