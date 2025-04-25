@@ -2,6 +2,8 @@
 
 Simple, privacy-focused web analytics you can self-host on Cloudflare.
 
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/abegehr/chickadee)
+
 Monorepo:
 
 - `./packages/app` - the service: events endpoint, client script, and dashboard
